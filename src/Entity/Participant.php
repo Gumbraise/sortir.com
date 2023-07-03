@@ -16,7 +16,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte avec cet email')]
+#[UniqueEntity(fields: ['pseudo'], message: 'Il y a déjà un compte avec ce pseudo')]
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     #[ORM\Id]
@@ -66,6 +67,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
 
     #[ORM\Column]
     private ?DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $pseudo = null;
+
+    public function __toString()
+    {
+        return $this->pseudo;
+    }
 
     public function serialize(): ?string
     {
@@ -352,6 +361,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
