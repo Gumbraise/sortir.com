@@ -3,16 +3,21 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Participant implements UserInterface, PasswordAuthenticatedUserInterface
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -52,9 +57,55 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Sortie::class, mappedBy: 'participants')]
     private Collection $sorties;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $profilePictureName;
+
+    #[Vich\UploadableField(mapping: 'profile_picture', fileNameProperty: 'profilePictureName')]
+    #[Assert\File(maxSize: '8192k', mimeTypes: ["image/jpeg", "image/png", "image/gif"])]
+    private $profilePictureFile;
+
+    #[ORM\Column]
+    private ?DateTimeImmutable $updatedAt = null;
+
+    public function serialize()
+    {
+        return serialize(
+            array_values(
+                array_diff_assoc(
+                    get_object_vars($this),
+                    [
+                        "profilePictureName" => $this->profilePictureName,
+                        "profilePictureFile" => $this->profilePictureFile,
+                    ]
+                )
+            )
+        );
+
+    }
+
+    public function unserialize($data)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->roles,
+            $this->password,
+            $this->nom,
+            $this->prenom,
+            $this->telephone,
+            $this->actif,
+            $this->campus,
+            $this->sortiesOrganisees,
+            $this->sorties,
+            $this->updatedAt,
+            ) = unserialize($data);
+    }
+
+
     public function __construct()
     {
         $this->actif = false;
+        $this->updatedAt = new DateTimeImmutable();
 
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
@@ -84,7 +135,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -228,21 +279,79 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sorty): static
+    public function addSortie(Sortie $sortie): static
     {
-        if (!$this->sorties->contains($sorty)) {
-            $this->sorties->add($sorty);
-            $sorty->addParticipant($this);
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties->add($sortie);
+            $sortie->addParticipant($this);
         }
 
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): static
+    public function removeSortie(Sortie $sortie): static
     {
-        if ($this->sorties->removeElement($sorty)) {
-            $sorty->removeParticipant($this);
+        if ($this->sorties->removeElement($sortie)) {
+            $sortie->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProfilePictureName(): ?string
+    {
+        return $this->profilePictureName;
+    }
+
+    /**
+     * @param string|null $profilePictureName
+     * @return $this
+     */
+    public function setProfilePictureName(?string $profilePictureName): static
+    {
+        $this->profilePictureName = $profilePictureName;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfilePictureFile()
+    {
+        return $this->profilePictureFile;
+    }
+
+    /**
+     * @param $profilePictureFile
+     * @return $this
+     */
+    public function setProfilePictureFile($profilePictureFile): static
+    {
+        $this->profilePictureFile = $profilePictureFile;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($profilePictureFile) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new DateTimeImmutable('now');
+        }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
