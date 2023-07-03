@@ -67,7 +67,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     #[ORM\Column]
     private ?DateTimeImmutable $updatedAt = null;
 
-    public function serialize()
+    public function serialize(): ?string
     {
         return serialize(
             array_values(
@@ -83,7 +83,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
 
     }
 
-    public function unserialize($data)
+    public function unserialize($data): void
     {
         list (
             $this->id,
