@@ -30,6 +30,7 @@ class SortieCrudController extends AbstractCrudController
             AssociationField::new('organisateur', 'Organisateur de la sortie'),
             AssociationField::new('participants', 'Participants à la sortie'),
             AssociationField::new('lieu', 'Lieu de la sortie'),
+            AssociationField::new('campus', 'Campus de la sortie'),
         ];
     }
 }
