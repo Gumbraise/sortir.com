@@ -34,6 +34,11 @@ class Lieu
     #[ORM\JoinColumn(nullable: false)]
     private ?Ville $ville = null;
 
+    public function __toString()
+    {
+        return $this->nom.' - '.$this->rue.' ('.$this->ville->getNom().')';
+    }
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();

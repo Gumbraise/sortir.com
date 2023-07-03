@@ -21,6 +21,11 @@ class Campus
     #[ORM\OneToMany(mappedBy: 'campus', targetEntity: Participant::class)]
     private Collection $participants;
 
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
