@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -39,6 +42,32 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function search($campus, $nom, $dateDebut, $dateFin): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.dateHeureDebut', 'DESC');
+        if ($campus) {
+            $qb->andWhere('s.campus = :campus')
+                ->setParameter('campus', $campus);
+        }
+        if ($nom) {
+            $qb->andWhere('s.nom LIKE :nom')
+                ->setParameter('nom', '%' . $nom . '%');
+        }
+        if ($dateDebut) {
+            $qb->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', $dateDebut);
+        }
+        if ($dateFin) {
+            $qb->andWhere('s.dateHeureDebut <= :dateFin')
+                ->setParameter('dateFin', $dateFin);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */

@@ -3,20 +3,22 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
-    <h1>Sortie index</h1>
-
+    <h2>Filtrer les sorties</h2>
+    {{ form_start(form) }}
+    <button>Seacrehr</button>
+    {{ form_end(form) }}
     <table class="table">
         <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>Inscrits/Places</th>
-                <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Inscrits/Places</th>
+            <th>Etat</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for sortie in sorties %}
@@ -29,17 +31,34 @@
                 <td>{{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}</td>
                 <td>{{ sortie.organisateur.getFullname }}</td>
                 <td>
-                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
-                    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
+                    {% if app.user == sortie.organisateur %}
+                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        {% if sortie.etat == "Créée" %}
+                            <span> - </span>
+                            <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Publier</a>
+                        {% elseif sortie.etat == "Ouverte" %}
+                            <span> - </span>
+                            <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Annuler</a>
+                        {% endif %}
+                    {% else %}
+                        {% if sortie.etat == "Ouverte" %}
+                            {% if not sortie.participants.contains(app.user) %}
+                                <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">S'inscrire</a>
+                            {% elseif sortie.participants.contains(app.user) %}
+                                <span> - </span>
+                                <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Se désister</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Il n'y a pas de sorties de prévues</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_sortie_new') }}">Create new</a>
+    <a href="{{ path('app_sortie_new') }}">Create une sortie</a>
 {% endblock %}
