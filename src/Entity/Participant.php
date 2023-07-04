@@ -160,7 +160,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): staticgetEmail
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
