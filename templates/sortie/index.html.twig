@@ -49,7 +49,7 @@
                                 <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
                             {% elseif sortie.participants.contains(app.user) %}
                                 <span> - </span>
-                                <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Se désister</a>
+                                <a href="{{ path('app_sortie_desinscription', {'id': sortie.id}) }}">Se désister</a>
                             {% endif %}
                         {% endif %}
                     {% endif %}

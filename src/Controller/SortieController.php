@@ -100,6 +100,22 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/{id}/desinscrire', name: 'app_sortie_desinscription', methods: ['GET', 'POST'])]
+    public function desinscrire(
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+    ): Response
+    {
+        $sortie->removeParticipant($this->getUser());
+        try {
+            $entityManager->flush();
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la désinscription');
+        }
+
+        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
     {
