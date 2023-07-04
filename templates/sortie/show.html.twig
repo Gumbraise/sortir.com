@@ -57,6 +57,15 @@
         </tr>
         </tbody>
     </table>
+    <div
+            style="height: 500px;"
+            {{ stimulus_controller('leaflet', {
+                latitude: sortie.lieu.latitude,
+                longitude: sortie.lieu.longitude,
+            }) }}
+    >
+
+    </div>
     <h2>Liste des participants inscrits</h2>
     <table class="table">
         <thead>
