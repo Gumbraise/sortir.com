@@ -43,14 +43,17 @@
                             <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Annuler</a>
                         {% endif %}
                     {% else %}
-                        {% if sortie.etat == "Ouverte" %}
-                            {% if not sortie.participants.contains(app.user) %}
-                                <span> - </span>
-                                <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
-                            {% elseif sortie.participants.contains(app.user) %}
-                                <span> - </span>
-                                <a href="{{ path('app_sortie_desinscription', {'id': sortie.id}) }}">Se désister</a>
-                            {% endif %}
+                        {%
+                            if not sortie.participants.contains(app.user)
+                            and date(sortie.dateLimiteInscription) > date()
+                            and sortie.etat == "Ouverte"
+                            and sortie.participants|length < sortie.nbInscriptionMax
+                        %}
+                            <span> - </span>
+                            <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
+                        {% elseif sortie.participants.contains(app.user) %}
+                            <span> - </span>
+                            <a href="{{ path('app_sortie_desinscription', {'id': sortie.id}) }}">Se désister</a>
                         {% endif %}
                     {% endif %}
                 </td>

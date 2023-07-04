@@ -86,10 +86,20 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/inscrire', name: 'app_sortie_inscription', methods: ['GET', 'POST'])]
     public function inscrire(
-        Sortie $sortie,
+        Sortie                 $sortie,
         EntityManagerInterface $entityManager,
     ): Response
     {
+        if (
+            $sortie->getParticipants()->contains($this->getUser()) ||
+            $sortie->getEtat()->getLibelle() !== 'Ouverte' ||
+            $sortie->getNbInscriptionMax() <= $sortie->getParticipants()->count() ||
+            $sortie->getDateLimiteInscription() < new \DateTimeImmutable()
+        ) {
+            $this->addFlash('error', 'La date limite d\'inscription est dépassée');
+            return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
+        }
+
         $sortie->addParticipant($this->getUser());
         try {
             $entityManager->flush();
@@ -102,7 +112,7 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/desinscrire', name: 'app_sortie_desinscription', methods: ['GET', 'POST'])]
     public function desinscrire(
-        Sortie $sortie,
+        Sortie                 $sortie,
         EntityManagerInterface $entityManager,
     ): Response
     {
