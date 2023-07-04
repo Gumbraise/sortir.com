@@ -79,6 +79,11 @@ class SortieController extends AbstractController
     #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
     public function show(Sortie $sortie): Response
     {
+        if ($sortie->getDateHeureDebut() < new \DateTimeImmutable("-1 month")) {
+            $this->addFlash('error', 'La sortie est trop ancienne pour être affichée');
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
         ]);
@@ -94,7 +99,8 @@ class SortieController extends AbstractController
             $sortie->getParticipants()->contains($this->getUser()) ||
             $sortie->getEtat()->getLibelle() !== 'Ouverte' ||
             $sortie->getNbInscriptionMax() <= $sortie->getParticipants()->count() ||
-            $sortie->getDateLimiteInscription() < new \DateTimeImmutable()
+            $sortie->getDateLimiteInscription() < new \DateTimeImmutable() ||
+            $sortie->getDateHeureDebut() < new \DateTimeImmutable("-1 month")
         ) {
             $this->addFlash('error', 'La date limite d\'inscription est dépassée');
             return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
