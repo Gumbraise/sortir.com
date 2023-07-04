@@ -31,7 +31,7 @@ class ProfilEditController extends AbstractController
             $entityManager->flush();
 
 
-            return $this->redirectToRoute('app_profil');
+            return $this->redirectToRoute('app_profil_edit');
         }
 
         return $this->render('profilEdit/index.html.twig', [
