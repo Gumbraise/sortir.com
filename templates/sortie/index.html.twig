@@ -31,7 +31,9 @@
                 <td>{{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}</td>
                 <td>{{ sortie.organisateur.getFullname }}</td>
                 <td>
+                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
                     {% if app.user == sortie.organisateur %}
+                        <span> - </span>
                         <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
                         {% if sortie.etat == "Créée" %}
                             <span> - </span>
@@ -43,6 +45,7 @@
                     {% else %}
                         {% if sortie.etat == "Ouverte" %}
                             {% if not sortie.participants.contains(app.user) %}
+                                <span> - </span>
                                 <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">S'inscrire</a>
                             {% elseif sortie.participants.contains(app.user) %}
                                 <span> - </span>
