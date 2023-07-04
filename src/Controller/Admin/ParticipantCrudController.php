@@ -30,13 +30,14 @@ class ParticipantCrudController extends AbstractCrudController
             ->setBasePath('/images/pictures');
 
         $fields = [
+            TextField::new('pseudo', 'Pseudo'),
             TextField::new('prenom', 'Prénom'),
             TextField::new('nom', 'Nom'),
             TelephoneField::new('telephone', 'Numéro de téléphone'),
             EmailField::new('email', 'Adresse mail'),
             ArrayField::new('roles', 'Rôles'),
             AssociationField::new('campus', 'Campus')
-            ->setRequired(false),
+                ->setRequired(false),
         ];
 
         if ($pageName == Crud::PAGE_INDEX || $pageName == Crud::PAGE_DETAIL) {
