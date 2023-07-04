@@ -52,7 +52,7 @@ class AppFixtures extends Fixture
         // Villes
         for ($i = 0; $i < 5; $i++) {
             $ville = new Ville();
-            $ville->setNom($faker->city()); 
+            $ville->setNom($faker->city());
             $ville->setCodePostal($faker->postcode());
 
             $manager->persist($ville);
@@ -106,16 +106,18 @@ class AppFixtures extends Fixture
 
         // Sorties
         for ($i = 0; $i < 10; $i++) {
+            $todayBetween6Months = $faker->dateTimeBetween('now', '+1 month');
             $sortie = new Sortie();
             $sortie->setNom($faker->sentence(3));
-            $sortie->setDateHeureDebut(DateTimeImmutable::createFromMutable($faker->dateTime('+1 month')));
-            $sortie->setDuree(DateTimeImmutable::createFromFormat('H:i', $faker->time('H:i')));
-            $sortie->setDateLimiteInscription(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 month', '+6 months')));
-            $sortie->setNbInscriptionMax($faker->numberBetween(5, 20));
+            $sortie->setDateHeureDebut(DateTimeImmutable::createFromMutable($todayBetween6Months));
+            $sortie->setDuree($faker->numberBetween(10, 300));
+            $sortie->setDateLimiteInscription(DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 month', $todayBetween6Months)));
+            $sortie->setNbInscriptionMax($faker->numberBetween(1, 7));
+            $sortie->setInfosSortie($faker->text());
             $sortie->setInfosSortie($faker->text());
             $sortie->setEtat($faker->randomElement($allEtats));
             $sortie->setOrganisateur($faker->randomElement($allParticipants));
-            for ($j = 0; $j < $faker->numberBetween(0, 10); $j++) {
+            for ($j = 0; $j < $faker->numberBetween(0, $sortie->getNbInscriptionMax()); $j++) {
                 $sortie->addParticipant($faker->randomElement($allParticipants));
             }
             $sortie->setLieu($faker->randomElement($allLieux));

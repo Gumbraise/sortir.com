@@ -24,7 +24,7 @@ class SortieCrudController extends AbstractCrudController
             DateTimeField::new('dateHeureDebut', 'Date et heure de la sortie'),
             DateTimeField::new('dateLimiteInscription', 'Date limite d\'inscription'),
             IntegerField::new('nbInscriptionMax', 'Nombre de places'),
-            DateTimeField::new('duree', 'Durée'),
+            IntegerField::new('duree', 'Durée'),
             TextareaField::new('infosSortie', 'Informations sur la sortie'),
             AssociationField::new('etat', 'Etat de la sortie'),
             AssociationField::new('organisateur', 'Organisateur de la sortie'),
