@@ -96,7 +96,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     {
         list (
             $this->id,
-            $this->pseudo,
+            //$this->pseudo,//Pourquoi ça fait crash l'admin panel ?
             $this->email,
             $this->roles,
             $this->password,
