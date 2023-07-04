@@ -24,7 +24,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(length: 255,unique: true)]
+    private ?string $pseudo = null;
+
+    #[ORM\Column(length: 180,unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -87,6 +90,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     {
         list (
             $this->id,
+            $this->pseudo,
             $this->email,
             $this->roles,
             $this->password,
@@ -114,6 +118,17 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPseudo(): string
+    {
+        return (string)$this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -150,7 +165,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): staticgetEmail
     {
         $this->roles = $roles;
 
