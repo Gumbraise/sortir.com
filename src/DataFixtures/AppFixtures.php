@@ -79,7 +79,7 @@ class AppFixtures extends Fixture
         $admin->setEmail('admin@sortir.com');
         $admin->setPassword($this->passwordHasher->hashPassword(
             $admin,
-            "admin"
+            "admin123"
         ));
         $admin->setNom($faker->lastName());
         $admin->setPrenom($faker->firstName());

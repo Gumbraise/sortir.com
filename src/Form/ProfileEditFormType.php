@@ -7,12 +7,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ProfileEditFormType extends AbstractType
 {
@@ -25,7 +27,7 @@ class ProfileEditFormType extends AbstractType
 //            ->setBasePath('/images/pictures');
 
         $builder
-            ->add('pseudo',TextType::class,[
+            ->add('pseudo', TextType::class, [
                 'label' => 'Pseudonyme',
                 'required' => true,
                 'constraints' => [
@@ -35,7 +37,7 @@ class ProfileEditFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('prenom',TextType::class,[
+            ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'required' => true,
                 'constraints' => [
@@ -45,7 +47,7 @@ class ProfileEditFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('nom',TextType::class,[
+            ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'required' => true,
                 'constraints' => [
@@ -55,7 +57,7 @@ class ProfileEditFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('telephone',TextType::class,[
+            ->add('telephone', TextType::class, [
                 'label' => 'Téléphone',
                 'required' => true,
                 'attr' => ['placeholder' => 'Ex : +33600000000'],
@@ -66,30 +68,57 @@ class ProfileEditFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('email',EmailType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'E-mail',
                 'required' => true,
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
+            ->add('plainPassword', RepeatedType::class, [
+                    'type' => PasswordType::class,
+                    'invalid_message' => 'Les deux mots de passe doivent être les mêmes.',
+                    'mapped' => false,
+                    'required' => false,
+
+                    'first_options' => [
+                        'label' => 'Mot de passe',
+                        'attr' => ['autocomplete' => 'new-password'],
+                        'constraints' => [
+                            new NotBlank([
+                                'message' => 'Please enter a password',
+                            ]),
+                            new Length([
+                                'min' => 6,
+                                'minMessage' => 'Your password should be at least {{ limit }} characters',
+                                // max length allowed by Symfony for security reasons
+                                'max' => 4096,
+                            ]),
+                        ],
+                    ],
+                    'second_options' => [
+                        'label' => 'Confirmation du mot de passe',
+                        'attr' => ['autocomplete' => 'new-password'],
+                        'constraints' => [
+                            new NotBlank([
+                                'message' => 'Please enter a password',
+                            ]),
+                            new Length([
+                                'min' => 6,
+                                'minMessage' => 'Your password should be at least {{ limit }} characters',
+                                // max length allowed by Symfony for security reasons
+                                'max' => 4096,
+                            ]),
+                        ],
+                    ]
+                ]
+            )
             ->add('campus')
-            //->add('profilePictureName')
-        ;
+            ->add('profilePictureFile', VichImageType::class, [
+                'label' => 'Photo de profil',
+                'required' => false,
+                'allow_delete' => false,
+                'download_uri' => false,
+                'image_uri' => false,
+                'asset_helper' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
