@@ -38,7 +38,7 @@ class SortieController extends AbstractController
             $dateLimiteInscription = $form->get('dateLimiteInscription')->getData() ?? $form->get('dateLimiteInscription')->getData();
             $nom = $form->get('nom')->getData() ?? $form->get('nom')->getData();
         }
-        
+
         $sorties = $sortieRepository->search(
             $campus,
             $nom,
