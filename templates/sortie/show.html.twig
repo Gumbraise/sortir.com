@@ -77,8 +77,16 @@
         <tbody>
         {% for participant in sortie.participants %}
             <tr>
-                <td>{{ participant.pseudo }}</td>
-                <td>{{ participant.getFullname }}</td>
+                <td>
+                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">
+                        {{ participant.pseudo }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">
+                        {{ participant.getFullname }}
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

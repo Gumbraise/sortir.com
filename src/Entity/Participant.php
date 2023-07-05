@@ -78,7 +78,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->actif = false;
+        $this->actif = true;
         $this->updatedAt = new DateTimeImmutable();
 
         $this->sortiesOrganisees = new ArrayCollection();
