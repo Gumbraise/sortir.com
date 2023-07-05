@@ -11,9 +11,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/profil')]
 class ProfilController extends AbstractController
 {
-    #[Route('/profil/{id}', name: 'app_profil', priority: -1)]
+    #[Route('/', name: 'app_profil_own')]
+    public function own(): Response
+    {
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->redirectToRoute('app_profil', ['id' => $this->getUser()->getId()]);
+    }
+
+
+    #[Route('/{id}', name: 'app_profil', priority: -1)]
     public function index(
         Participant $participant
     ): Response
@@ -24,10 +37,10 @@ class ProfilController extends AbstractController
         ]);
     }
 
-    #[Route('/profil/edit', name: 'app_profil_edit')]
+    #[Route('edit', name: 'app_profil_edit')]
     public function edit(
-        Request                $request,
-        EntityManagerInterface $entityManager,
+        Request                     $request,
+        EntityManagerInterface      $entityManager,
         UserPasswordHasherInterface $userPasswordHasher
     ): Response
     {
