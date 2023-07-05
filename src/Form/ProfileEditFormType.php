@@ -18,6 +18,12 @@ class ProfileEditFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+//        $profilePictureFile = TextareaField::new('profilePictureFile', 'Photo de profil')
+//            ->setFormType(VichImageType::class)
+//            ->hideOnIndex();
+//        $profilePictureName = ImageField::new('profilePictureName', 'Photo de profil')
+//            ->setBasePath('/images/pictures');
+
         $builder
             ->add('pseudo',TextType::class,[
                 'label' => 'Pseudonyme',

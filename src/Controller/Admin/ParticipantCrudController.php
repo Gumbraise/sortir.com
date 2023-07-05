@@ -23,10 +23,10 @@ class ParticipantCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $profilePictureFile = TextareaField::new('profilePictureFile', 'Photo de profilEdit')
+        $profilePictureFile = TextareaField::new('profilePictureFile', 'Photo de profil')
             ->setFormType(VichImageType::class)
             ->hideOnIndex();
-        $profilePictureName = ImageField::new('profilePictureName', 'Photo de profilEdit')
+        $profilePictureName = ImageField::new('profilePictureName', 'Photo de profil')
             ->setBasePath('/images/pictures');
 
         $fields = [
