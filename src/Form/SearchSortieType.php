@@ -25,17 +25,16 @@ class SearchSortieType extends AbstractType
                 'label' => 'Entre',
                 'required' => false,
                 'widget' => 'single_text',
-                'empty_data' => (new DateTimeImmutable())->format('c'),
+                'input_format' => 'd/m/Y',
+                'empty_data' => (new DateTimeImmutable())->format(DateTimeType::HTML5_FORMAT),
             ])
             ->add('dateLimiteInscription', DateTimeType::class, [
                 'input' => 'datetime_immutable',
                 'label' => 'et',
                 'required' => false,
                 'widget' => 'single_text',
-                'attr' => [
-                    'class' => 'js-datepicker',
-                ],
-                'empty_data' => (new DateTimeImmutable('9999/12/31'))->format('c'),
+                'input_format' => 'd/m/Y',
+                'empty_data' => (new DateTimeImmutable('9999/12/31'))->format(DateTimeType::HTML5_FORMAT),
             ])
             ->add('campus');
     }

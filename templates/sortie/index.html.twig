@@ -4,8 +4,24 @@
 
 {% block body %}
     <h2>Filtrer les sorties</h2>
-    {{ form_start(form) }}
-    <button>Seacrehr</button>
+    {{ form_start(form, {
+        attr: {
+            'data-controller': 'datepicker',
+        }
+    }) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.dateHeureDebut, {
+        attr: {
+            'data-datepicker-target': 'date1',
+        }
+    }) }}
+    {{ form_row(form.dateLimiteInscription, {
+        attr: {
+            'data-datepicker-target': 'date2',
+        }
+    }) }}
+    {{ form_row(form.campus) }}
+    <button>Rechercher</button>
     {{ form_end(form) }}
     <table class="table">
         <thead>
@@ -29,7 +45,9 @@
                 <td>{{ sortie.participants|length ~ '/' ~ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat }}</td>
                 <td>{{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}</td>
-                <td>{{ sortie.organisateur.getFullname }}</td>
+                <td>
+                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur.getFullname }}</a>
+                </td>
                 <td>
                     <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
                     {% if app.user == sortie.organisateur %}
@@ -43,12 +61,10 @@
                             <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Annuler</a>
                         {% endif %}
                     {% else %}
-                        {%
-                            if not sortie.participants.contains(app.user)
+                        {% if not sortie.participants.contains(app.user)
                             and date(sortie.dateLimiteInscription) > date()
                             and sortie.etat == "Ouverte"
-                            and sortie.participants|length < sortie.nbInscriptionMax
-                        %}
+                            and sortie.participants|length < sortie.nbInscriptionMax %}
                             <span> - </span>
                             <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
                         {% elseif sortie.participants.contains(app.user) %}
