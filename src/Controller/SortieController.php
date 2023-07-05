@@ -32,14 +32,13 @@ class SortieController extends AbstractController
         $dateHeureDebut = (new \DateTimeImmutable());
         $dateLimiteInscription = (new \DateTimeImmutable("9999/12/31"));
 
-        dump($dateHeureDebut, $dateLimiteInscription);
         if ($form->isSubmitted() && $form->isValid()) {
             $campus = $form->get('campus')->getData() ?? $form->get('campus')->getData();
             $dateHeureDebut = $form->get('dateHeureDebut')->getData() ?? $form->get('dateHeureDebut')->getData();
             $dateLimiteInscription = $form->get('dateLimiteInscription')->getData() ?? $form->get('dateLimiteInscription')->getData();
             $nom = $form->get('nom')->getData() ?? $form->get('nom')->getData();
         }
-        dump($dateHeureDebut, $dateLimiteInscription);
+        
         $sorties = $sortieRepository->search(
             $campus,
             $nom,

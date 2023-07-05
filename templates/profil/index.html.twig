@@ -15,7 +15,7 @@
 
 <div class="example-wrapper">
     <div style="display: flex; flex-direction: column; gap:5px;">
-        <img src="{{ asset('images/pictures/'~(userData.image)) }}" alt="Image manquante" style="display:block;max-height: 250px;object-fit: contain"/>
+        <img src="{{ vich_uploader_asset(userData, 'profilePictureFile') }}" alt="Image manquante" style="display:block;max-height: 250px;object-fit: contain"/>
         <p>{{ userData.pseudo }}</p>
         <div class="inline">
             <label>Nom</label>
