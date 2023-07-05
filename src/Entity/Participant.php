@@ -18,7 +18,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte avec cet email')]
 #[UniqueEntity(fields: ['pseudo'], message: 'Il y a déjà un compte avec ce pseudo')]
-class Participant implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -76,42 +76,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
         return $this->pseudo;
     }
 
-    public function serialize(): ?string
-    {
-        return serialize(
-            array_values(
-                array_diff_assoc(
-                    get_object_vars($this),
-                    [
-                        "profilePictureName" => $this->profilePictureName,
-                        "profilePictureFile" => $this->profilePictureFile,
-                    ]
-                )
-            )
-        );
-
-    }
-
-    public function unserialize($data): void
-    {
-        list (
-            $this->id,
-            //$this->pseudo,//Pourquoi ça fait crash l'admin panel ?
-            $this->email,
-            $this->roles,
-            $this->password,
-            $this->nom,
-            $this->prenom,
-            $this->telephone,
-            $this->actif,
-            $this->campus,
-            $this->sortiesOrganisees,
-            $this->sorties,
-            $this->updatedAt,
-            ) = unserialize($data);
-    }
-
-
     public function __construct()
     {
         $this->actif = false;
@@ -160,7 +124,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): staticgetEmail
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
