@@ -3,30 +3,48 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
-use App\Repository\ParticipantRepository;
+use App\Form\ProfileEditFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProfilController extends AbstractController
 {
-    #[Route('/profil/{id}', name: 'app_profil')]
-    public function index($id,ParticipantRepository $participantRepository): Response
+    #[Route('/profil/{id}', name: 'app_profil', priority: -1)]
+    public function index(
+        Participant $participant
+    ): Response
     {
-        $user = $participantRepository->find($id);
-        $userData = [
-            'image' => $user->getProfilePictureName(),
-            'pseudo' => $user->getPseudo(),
-            'prenom' => $user->getPrenom(),
-            'nom' => $user->getNom(),
-            'telephone' => $user->getTelephone(),
-            'email' => $user->getEmail(),
-            'campus' => $user->getCampus()?->getNom(),
-        ];
-        //dd($userData);
         return $this->render('profil/index.html.twig', [
             'controller_name' => 'ProfilController',
-            'userData' => $userData
+            'userData' => $participant
         ]);
     }
+
+    #[Route('/profil/edit', name: 'app_profil_edit')]
+    public function edit(
+        Request                $request,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        /** @var Participant $user */
+        $user = $this->getUser();
+        $form = $this->createForm(ProfileEditFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre profil a bien été modifié.');
+            return $this->redirectToRoute('app_profil_edit');
+        }
+
+        return $this->render('profil/edit.html.twig', [
+            'form' => $form
+        ]);
+    }
+
 }
