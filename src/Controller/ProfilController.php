@@ -31,6 +31,11 @@ class ProfilController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher
     ): Response
     {
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
+        }
+
         /** @var Participant $user */
         $user = $this->getUser();
         $form = $this->createForm(ProfileEditFormType::class, $user);
