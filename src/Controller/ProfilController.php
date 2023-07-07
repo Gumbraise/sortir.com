@@ -55,16 +55,23 @@ class ProfilController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+//            $user->setPassword(
+//                $userPasswordHasher->hashPassword(
+//                    $user,
+//                    $form->get('plainPassword')->getData()
+//                )
+//            );
+            $userSave = $user;
+
+            $plainPassword = $form->get('plainPassword')->getData();
+            if(!empty($plainPassword)){
+                $user->setPassword($plainPassword);
+            }
 
             $entityManager->persist($user);
-            $entityManager->flush();
 
+            $entityManager->flush();
+            dd($userSave,$user);
             $this->addFlash('success', 'Votre profil a bien été modifié.');
             return $this->redirectToRoute('app_profil_edit');
         }

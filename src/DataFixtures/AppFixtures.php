@@ -77,10 +77,7 @@ class AppFixtures extends Fixture
         $admin->setRoles(["ROLE_ADMIN"]);
         $admin->setPseudo('admin');
         $admin->setEmail('admin@sortir.com');
-        $admin->setPassword($this->passwordHasher->hashPassword(
-            $admin,
-            "admin123"
-        ));
+        $admin->setPassword("admin123");
         $admin->setNom($faker->lastName());
         $admin->setPrenom($faker->firstName());
         $admin->setTelephone($faker->phoneNumber());
@@ -91,10 +88,7 @@ class AppFixtures extends Fixture
             $participant = new Participant();
             $participant->setPseudo($faker->userName());
             $participant->setEmail($faker->email());
-            $participant->setPassword($this->passwordHasher->hashPassword(
-                $participant,
-                "password"
-            ));
+            $participant->setPassword("password");
             $participant->setNom($faker->lastName());
             $participant->setPrenom($faker->firstName());
             $participant->setTelephone($faker->phoneNumber());
