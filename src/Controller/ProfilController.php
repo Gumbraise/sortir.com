@@ -71,7 +71,6 @@ class ProfilController extends AbstractController
             $entityManager->persist($user);
 
             $entityManager->flush();
-            dd($userSave,$user);
             $this->addFlash('success', 'Votre profil a bien été modifié.');
             return $this->redirectToRoute('app_profil_edit');
         }
