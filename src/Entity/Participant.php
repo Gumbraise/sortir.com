@@ -74,6 +74,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, unique: true)]
     private ?string $pseudo = null;
 
+    public bool $passwordChanged = false;
+
     public function __toString()
     {
         return $this->pseudo;
@@ -142,9 +144,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+
     public function setPassword(string $password): static
     {
         $this->password = $password;
+        $this->passwordChanged = true;
         return $this;
     }
 

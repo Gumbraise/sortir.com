@@ -46,10 +46,7 @@ class ParticipantSubscriber implements EventSubscriber
 
     public function hashPassword(Participant $user): void
     {
-        $plainPassword = $user->getPassword();
-
-        // If the password hasn't changed, no need to hash it again
-        if (empty($plainPassword)) {
+        if(!$user->passwordChanged){
             return;
         }
         $user->setPassword(

@@ -81,6 +81,7 @@ class AppFixtures extends Fixture
         $admin->setNom($faker->lastName());
         $admin->setPrenom($faker->firstName());
         $admin->setTelephone($faker->phoneNumber());
+        $admin->setActif(true);
         $manager->persist($admin);
 
         // Participants
@@ -93,7 +94,7 @@ class AppFixtures extends Fixture
             $participant->setPrenom($faker->firstName());
             $participant->setTelephone($faker->phoneNumber());
             $participant->setCampus($faker->randomElement($allCampus));
-
+            $participant->setActif(true);
             $manager->persist($participant);
             $allParticipants[] = $participant;
         }

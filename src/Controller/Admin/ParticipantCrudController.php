@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
@@ -38,6 +39,7 @@ class ParticipantCrudController extends AbstractCrudController
             ArrayField::new('roles', 'Rôles'),
             AssociationField::new('campus', 'Campus')
                 ->setRequired(false),
+            BooleanField::new('actif','Est Actif ?')
         ];
 
         if ($pageName == Crud::PAGE_INDEX || $pageName == Crud::PAGE_DETAIL) {
