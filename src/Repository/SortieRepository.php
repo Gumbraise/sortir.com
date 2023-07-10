@@ -48,9 +48,7 @@ class SortieRepository extends ServiceEntityRepository
     public function search($campus, $nom, $dateDebut, $dateFin): array
     {
         $qb = $this->createQueryBuilder('s')
-            ->orderBy('s.dateHeureDebut', 'DESC')
-            ->where('s.dateHeureDebut >= :aMonthAgo')
-            ->setParameter('aMonthAgo', new DateTimeImmutable("-1 month"));
+            ->orderBy('s.dateHeureDebut', 'DESC');
         if ($campus) {
             $qb->andWhere('s.campus = :campus')
                 ->setParameter('campus', $campus);
@@ -62,6 +60,9 @@ class SortieRepository extends ServiceEntityRepository
         if ($dateDebut) {
             $qb->andWhere('s.dateHeureDebut >= :dateDebut')
                 ->setParameter('dateDebut', $dateDebut);
+        } else {
+            $qb->andWhere('s.dateHeureDebut >= :dateDebut')
+                ->setParameter('dateDebut', new DateTimeImmutable("-1 month"));
         }
         if ($dateFin) {
             $qb->andWhere('s.dateHeureDebut <= :dateFin')
