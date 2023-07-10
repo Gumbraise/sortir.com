@@ -19,10 +19,14 @@ class SearchSortieType extends AbstractType
                 'required' => false,
             ])
             ->add('dateStart', DateTimeType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('dateEnd', DateTimeType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
                 'mapped' => false,
                 'required' => false,
             ])

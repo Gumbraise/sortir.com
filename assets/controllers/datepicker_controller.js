@@ -35,15 +35,7 @@ export default class extends Controller {
     resetDate(event) {
         event.preventDefault();
 
-        let startInputs = this.date1Target.querySelectorAll("option[selected=selected]");
-        let endInputs = this.date2Target.querySelectorAll("option[selected=selected]");
-
-        startInputs.forEach(input => {
-            input.selected = false;
-        })
-
-        endInputs.forEach(input => {
-            input.selected = false;
-        })
+        this.date1Target.value = '';
+        this.date2Target.value = '';
     }
 }
