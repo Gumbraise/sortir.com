@@ -31,4 +31,19 @@ export default class extends Controller {
 
         return year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
     }
+
+    resetDate(event) {
+        event.preventDefault();
+
+        let startInputs = this.date1Target.querySelectorAll("option[selected=selected]");
+        let endInputs = this.date2Target.querySelectorAll("option[selected=selected]");
+
+        startInputs.forEach(input => {
+            input.selected = false;
+        })
+
+        endInputs.forEach(input => {
+            input.selected = false;
+        })
+    }
 }

@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Campus;
 use App\Entity\Sortie;
-use DateTimeImmutable;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -20,23 +18,15 @@ class SearchSortieType extends AbstractType
                 'label' => 'Le nom de la sortie contient :',
                 'required' => false,
             ])
-            ->add('dateHeureDebut', DateTimeType::class, [
-                'input' => 'datetime_immutable',
-                'label' => 'Entre',
+            ->add('dateStart', DateTimeType::class, [
+                'mapped' => false,
                 'required' => false,
-                'widget' => 'single_text',
-                'input_format' => 'd/m/Y',
-                'empty_data' => (new DateTimeImmutable())->format(DateTimeType::HTML5_FORMAT),
             ])
-            ->add('dateLimiteInscription', DateTimeType::class, [
-                'input' => 'datetime_immutable',
-                'label' => 'et',
+            ->add('dateEnd', DateTimeType::class, [
+                'mapped' => false,
                 'required' => false,
-                'widget' => 'single_text',
-                'input_format' => 'd/m/Y',
-                'empty_data' => (new DateTimeImmutable('9999/12/31'))->format(DateTimeType::HTML5_FORMAT),
             ])
-            ->add('campus');
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

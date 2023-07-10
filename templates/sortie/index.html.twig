@@ -10,17 +10,17 @@
         }
     }) }}
     {{ form_row(form.nom) }}
-    {{ form_row(form.dateHeureDebut, {
+    {{ form_row(form.dateStart, {
         attr: {
             'data-datepicker-target': 'date1',
         }
     }) }}
-    {{ form_row(form.dateLimiteInscription, {
+    {{ form_row(form.dateEnd, {
         attr: {
             'data-datepicker-target': 'date2',
         }
     }) }}
-    {{ form_row(form.campus) }}
+    <button {{ stimulus_action('datepicker', 'resetDate') }}>Reset date</button>
     <button>Rechercher</button>
     {{ form_end(form) }}
     <table class="table">

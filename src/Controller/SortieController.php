@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Sortie;
 use App\Form\SearchSortieType;
 use App\Form\SortieType;
-use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,35 +19,33 @@ class SortieController extends AbstractController
     public function index(
         Request          $request,
         SortieRepository $sortieRepository,
-        CampusRepository $campusRepository,
     ): Response
     {
-        $sortie = new Sortie();
-        $form = $this->createForm(SearchSortieType::class, $sortie);
+        $form = $this->createForm(SearchSortieType::class);
         $form->handleRequest($request);
 
-        $campus = [];
-        $nom = null;
-        $dateHeureDebut = (new \DateTimeImmutable());
-        $dateLimiteInscription = (new \DateTimeImmutable("9999/12/31"));
+        $name = null;
+        $startDate = new \DateTimeImmutable('now');
+        $endDate = new \DateTimeImmutable('+2 months');
+        $campus = $this->getUser()->getCampus();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $campus = $form->get('campus')->getData() ?? $form->get('campus')->getData();
-            $dateHeureDebut = $form->get('dateHeureDebut')->getData() ?? $form->get('dateHeureDebut')->getData();
-            $dateLimiteInscription = $form->get('dateLimiteInscription')->getData() ?? $form->get('dateLimiteInscription')->getData();
-            $nom = $form->get('nom')->getData() ?? $form->get('nom')->getData();
+            $name = $form->get('nom')->getData();
+            $startDate = $form->get('dateStart')->getData();
+            $endDate = $form->get('dateEnd')->getData();
+            $campus = $this->getUser()->getCampus();
+
         }
 
         $sorties = $sortieRepository->search(
             $campus,
-            $nom,
-            $dateHeureDebut,
-            $dateLimiteInscription,
+            $name,
+            $startDate,
+            $endDate,
         );
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'campuses' => $campusRepository->findAll(),
             'form' => $form->createView(),
         ]);
     }
