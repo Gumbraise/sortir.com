@@ -53,6 +53,9 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $raisonsAnnulation = null;
+
     public function __toString()
     {
         return $this->nom;
@@ -211,4 +214,16 @@ class Sortie
 
         return $this;
     }
+
+    public function getRaisonsAnnulation(): ?string
+    {
+        return $this->raisonsAnnulation;
+    }
+
+    public function setRaisonsAnnulation(?string $raisonsAnnulation): void
+    {
+        $this->raisonsAnnulation = $raisonsAnnulation;
+    }
+
+
 }

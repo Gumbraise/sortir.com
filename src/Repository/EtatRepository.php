@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Etat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,22 @@ class EtatRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Find an Etat entity by its libelle value.
+     *
+     * @param string $libelle
+     * @return Etat|null
+     * @throws NonUniqueResultException
+     */
+    public function findByLibelle(string $libelle): ?Etat
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.libelle = :libelle')
+            ->setParameter('libelle', $libelle)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
