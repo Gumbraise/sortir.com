@@ -96,6 +96,15 @@ class SortieController extends AbstractController
         Sortie $sortie
     ): Response
     {
+        if (
+            !$sortie->getParticipants()->contains($this->getUser()) &&
+            !$sortie->getCampus()->getParticipants()->contains($this->getUser()) &&
+            $sortie->getOrganisateur() !== $this->getUser() &&
+            !$this->isGranted('ROLE_ADMIN')
+        ) {
+            return $this->redirectToRoute('app_sortie_index');
+        }
+
         if ($sortie->getDateHeureDebut() < new \DateTimeImmutable("-1 month")) {
             $this->addFlash('error', 'La sortie est trop ancienne pour être affichée');
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
