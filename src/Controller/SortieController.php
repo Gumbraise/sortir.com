@@ -148,7 +148,11 @@ class SortieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
+    public function edit(
+        Request $request,
+        Sortie $sortie,
+        SortieRepository $sortieRepository
+    ): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -177,9 +181,6 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
     #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['POST'])]
     public function annuler(
         Request          $request,
@@ -202,6 +203,7 @@ class SortieController extends AbstractController
             $sortieRepository->save($sortie, true);
 
             $this->addFlash('success', "La sortie $sortie a bien été annulée");
+
         } catch (\Exception $e) {
             $this->addFlash('danger', "Une erreur s'est produite.");
         }
