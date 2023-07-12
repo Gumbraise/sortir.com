@@ -18,27 +18,27 @@
                 <li>
                     <a
                             href="{{ path('app_homepage') }}"
-                            class="block py-2 pl-3 pr-4 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0"
+                            class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_homepage' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                     >Accueil</a>
                 </li>
                 <li>
                     <a
                             href="{{ path('app_sortie_index') }}"
-                            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                            class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_sortie_index' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                     >Sorties</a>
                 </li>
                 {% if app.user %}
                     <li>
                         <a
                                 href="{{ path('app_profil_own') }}"
-                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                                class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_profil_own' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                         >Mon profil</a>
                     </li>
                     {% if is_granted('ROLE_ADMIN') %}
                         <li>
                             <a
                                     href="{{ path('admin') }}"
-                                    class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                                    class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'admin' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                             >Tableau de bord admin</a>
                         </li>
                     {% endif %}
@@ -46,7 +46,7 @@
                         <a
                                 href="{{ path('app_logout') }}"
                                 title="Se déconnecter"
-                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                                class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_logout' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
@@ -64,13 +64,13 @@
                     <li>
                         <a
                                 href="{{ path('app_login') }}"
-                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                                class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_login' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                         >Se connecter</a>
                     </li>
                     <li>
                         <a
                                 href="{{ path('app_register') }}"
-                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                                class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_register' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                         >S'inscrire</a>
                     </li>
                 {% endif %}
