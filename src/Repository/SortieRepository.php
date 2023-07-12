@@ -45,13 +45,20 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function search($campus, $nom, $dateDebut, $dateFin): array
+    public function search(
+        $user,
+        $nom,
+        $dateDebut,
+        $dateFin,
+        $checkboxs
+    ): array
     {
         $qb = $this->createQueryBuilder('s')
             ->orderBy('s.dateHeureDebut', 'DESC');
-        if ($campus) {
+
+        if ($user->getCampus()) {
             $qb->andWhere('s.campus = :campus')
-                ->setParameter('campus', $campus);
+                ->setParameter('campus', $user->getCampus());
         }
         if ($nom) {
             $qb->andWhere('s.nom LIKE :nom')
@@ -69,7 +76,34 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('dateFin', $dateFin);
         }
 
-        return $qb->getQuery()->getResult();
+        if ($checkboxs["isOrganisateur"]) {
+            $qb->andWhere('s.organisateur = :f1')
+                ->setParameter('f1', $user);
+        }
+        if ($checkboxs['isInscrit'] && $checkboxs['isNotInscrit']) {
+            $qb->leftJoin('s.participants', 'i')
+                ->andWhere('i = :g1 OR i != :g1')
+                ->setParameter('g1', $user);
+        } else {
+            if ($checkboxs['isInscrit']) {
+                $qb->leftJoin('s.participants', 'i1')
+                    ->andWhere('i1 = :h1')
+                    ->setParameter('h1', $user);
+            }
+            if ($checkboxs['isNotInscrit']) {
+                $qb->leftJoin('s.participants', 'i2')
+                    ->andWhere('i2 != :j1 OR i2 IS NULL')
+                    ->setParameter('j1', $user);
+            }
+        }
+        if ($checkboxs['isPast']) {
+            $qb->andWhere('s.dateHeureDebut < :now')
+                ->setParameter('now', new \DateTimeImmutable('now'));
+        }
+
+        return $qb
+            ->getQuery()
+            ->getResult();
     }
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

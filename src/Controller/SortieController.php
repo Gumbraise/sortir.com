@@ -26,22 +26,32 @@ class SortieController extends AbstractController
 
         $name = null;
         $startDate = new \DateTimeImmutable('now');
-        $endDate = new \DateTimeImmutable('+2 months');
-        $campus = $this->getUser()->getCampus();
+        $endDate = null;
+        $checkboxs = [
+            "isOrganisateur" => false,
+            "isInscrit" => true,
+            "isNotInscrit" => true,
+            "isPast" => false,
+        ];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $name = $form->get('nom')->getData();
             $startDate = $form->get('dateStart')->getData();
             $endDate = $form->get('dateEnd')->getData();
-            $campus = $this->getUser()->getCampus();
-
+            $checkboxs = [
+                "isOrganisateur" => $form->get('isOrganisateur')->getData(),
+                "isInscrit" => $form->get('isInscrit')->getData(),
+                "isNotInscrit" => $form->get('isNotInscrit')->getData(),
+                "isPast" => $form->get('isPast')->getData(),
+            ];
         }
 
         $sorties = $sortieRepository->search(
-            $campus,
+            $this->getUser(),
             $name,
             $startDate,
             $endDate,
+            $checkboxs
         );
 
         return $this->render('sortie/index.html.twig', [
@@ -61,6 +71,7 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setCampus($this->getUser()->getCampus());
             $sortieRepository->save($sortie, true);
 
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
