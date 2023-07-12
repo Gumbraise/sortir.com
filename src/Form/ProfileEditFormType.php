@@ -28,7 +28,7 @@ class ProfileEditFormType extends AbstractType
 
         $builder
             ->add('pseudo', TextType::class, [
-                'label' => 'Pseudonyme',
+                'label' => 'Pseudonyme : *',
                 'required' => true,
                 'constraints' => [
                     new Regex([
@@ -38,7 +38,7 @@ class ProfileEditFormType extends AbstractType
                 ],
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'Prénom : *',
                 'required' => true,
                 'constraints' => [
                     new Regex([
@@ -48,7 +48,7 @@ class ProfileEditFormType extends AbstractType
                 ],
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Nom',
+                'label' => 'Nom : *',
                 'required' => true,
                 'constraints' => [
                     new Regex([
@@ -58,7 +58,7 @@ class ProfileEditFormType extends AbstractType
                 ],
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Téléphone',
+                'label' => 'Téléphone : *',
                 'required' => true,
                 'attr' => ['placeholder' => 'Ex : +33600000000'],
                 'constraints' => [
@@ -69,7 +69,7 @@ class ProfileEditFormType extends AbstractType
                 ],
             ])
             ->add('email', EmailType::class, [
-                'label' => 'E-mail',
+                'label' => 'E-mail : *',
                 'required' => true,
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -79,7 +79,7 @@ class ProfileEditFormType extends AbstractType
                     'required' => false,
 
                     'first_options' => [
-                        'label' => 'Mot de passe',
+                        'label' => 'Mot de passe :',
                         'attr' => ['autocomplete' => 'new-password'],
                         'constraints' => [
                             new Length([
@@ -91,7 +91,7 @@ class ProfileEditFormType extends AbstractType
                         ],
                     ],
                     'second_options' => [
-                        'label' => 'Confirmation du mot de passe',
+                        'label' => 'Confirmation du mot de passe :',
                         'attr' => ['autocomplete' => 'new-password'],
                         'constraints' => [
                             new Length([
@@ -105,7 +105,7 @@ class ProfileEditFormType extends AbstractType
                 ]
             )
             ->add('profilePictureFile', VichImageType::class, [
-                'label' => 'Photo de profil',
+                'label' => 'Photo de profil : ',
                 'required' => false,
                 'allow_delete' => false,
                 'download_uri' => false,

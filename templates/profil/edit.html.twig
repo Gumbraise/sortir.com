@@ -3,9 +3,20 @@
 {% block title %}Modifier son profil{% endblock %}
 
 {% block body %}
-    <h1>Update User</h1>
+
+<div class="f-profile">
+    <div class="f-head">
+        <h1>Mon profil</h1>
+    </div>
 
     {{ form_start(form) }}
-    <button type="submit">Update</button>
+
+    <div class="f-button-container">
+        <a class="f-button f-button-secondary" href="{{ path('app_profil_own') }}">Annuler</a>
+        <button class="f-button" type="submit">Enregistrer</button>
+    </div>
     {{ form_end(form) }}
+
+</div>
+
 {% endblock %}

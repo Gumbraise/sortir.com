@@ -9,6 +9,7 @@ $secondary-color: #94a3b8;//slate 400
 $secondary-color-hover: #64748b;//slate 500
 $dark: #020617;//slate 950
 $light: #f1f5f9;//slate 100
+$lightgrey: #cbd5e1;//slate 300
 
 
 .f-profile{
@@ -42,6 +43,33 @@ $light: #f1f5f9;//slate 100
 
   .f-button-container{
     margin:20px;
+    order:50;//Pour s'assurer qu'il soit à la fin
+  }
+}
+form[name="profile_edit_form"]{
+  display:flex;
+  flex-direction: column;
+  gap:5px;
+  > div{
+    display: inline-flex;
+    place-content: space-between;
+    align-items: center;
+  }
+  input[type=text],input[type=email],input[type=password]{
+    outline: none;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: $light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-width: 2px;
+    border-color: $dark;
+    min-width: fit-content;
+    &:focus{
+      outline: none;
+      background-color: $lightgrey;
+    }
   }
 }
 
@@ -58,23 +86,22 @@ $light: #f1f5f9;//slate 100
   border-color: $dark;
   transition: linear 50ms;
   font-size: 20px;
-}
-.f-button:hover{
-  background-color: $primary-color-hover;
-}
-.f-button:not(:disabled){
-  cursor:pointer;
-}
-.f-button:disabled{
-  cursor: not-allowed;
+  &:hover{
+    background-color: $primary-color-hover;
+  }
+  &:not(:disabled){
+    cursor:pointer;
+  }
+  &:disabled{
+    cursor: not-allowed;
+  }
 }
 .f-button-secondary{
   background-color: $secondary-color;
+  &:hover{
+    background-color: $secondary-color-hover;
+  }
 }
-.f-button-secondary:hover{
-  background-color: $secondary-color-hover;
-}
-
 
 @media (max-width: 767px) {//mobile
 
