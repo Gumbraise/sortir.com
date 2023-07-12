@@ -24,6 +24,7 @@ class SortieController extends AbstractController
     public function index(
         Request          $request,
         SortieRepository $sortieRepository,
+        EtatRepository   $etatRepository,
     ): Response
     {
         $form = $this->createForm(SearchSortieType::class);
@@ -56,8 +57,9 @@ class SortieController extends AbstractController
             $name,
             $startDate,
             $endDate,
-            $checkboxs
-        );
+            $checkboxs,
+            $etatRepository->findByLibelle("Ouverte")
+    );
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -160,8 +162,8 @@ class SortieController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
     public function edit(
-        Request $request,
-        Sortie $sortie,
+        Request          $request,
+        Sortie           $sortie,
         SortieRepository $sortieRepository
     ): Response
     {
@@ -185,9 +187,9 @@ class SortieController extends AbstractController
      */
     #[Route('/{id}/publier', name: 'app_sortie_publish', methods: ['GET', 'POST'])]
     public function publish(
-        Sortie $sortie,
+        Sortie           $sortie,
         SortieRepository $sortieRepository,
-        EtatRepository $etatRepository
+        EtatRepository   $etatRepository
     ): Response
     {
         $sortie->setEtat($etatRepository->findByLibelle('Ouverte'));
