@@ -92,7 +92,9 @@ class SortieController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
-    public function show(Sortie $sortie): Response
+    public function show(
+        Sortie $sortie
+    ): Response
     {
         if ($sortie->getDateHeureDebut() < new \DateTimeImmutable("-1 month")) {
             $this->addFlash('error', 'La sortie est trop ancienne pour être affichée');
@@ -173,7 +175,11 @@ class SortieController extends AbstractController
      * @throws NonUniqueResultException
      */
     #[Route('/{id}/publier', name: 'app_sortie_publish', methods: ['GET', 'POST'])]
-    public function publish(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    public function publish(
+        Sortie $sortie,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ): Response
     {
         $sortie->setEtat($etatRepository->findByLibelle('Ouverte'));
         $sortieRepository->save($sortie, true);
