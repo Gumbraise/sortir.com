@@ -25,14 +25,14 @@
                 method="post"
                 {{ stimulus_controller('confirm-popup', {
                     title: 'Annuler la sortie ' ~ sortie.nom ,
-                    text: 'Êtes-vous sûr de vouloir continuer ?',
                     confirmationButtonText: 'Confirmer',
+                    submitAsync: true,
                 }) }}
         >
             <input type="submit"
                    class="{{ red ?? 'text-red-500 hover:text-red-600 cursor-pointer' }}"
                    value="Annuler"
-                    {{ stimulus_action('confirm-popup', 'onSubmit') }}
+                    {{ stimulus_action('confirm-popup', 'onSortieCancel') }}
             >
         </form>
     {% endif %}

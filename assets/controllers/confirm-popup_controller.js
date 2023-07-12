@@ -26,16 +26,50 @@ export default class extends Controller {
         });
     }
 
-    async submitForm() {
+    async onSortieCancel(event) {
+        event.preventDefault();
+
+        const {value: text} = await Swal.fire({
+            input: 'textarea',
+            inputLabel: 'Raison de l\'annulation',
+            inputPlaceholder: 'Raison de l\'annulation...',
+            inputAttributes: {
+                'aria-label': 'Raison de l\'annulation'
+            },
+            title: this.titleValue || null,
+            text: this.textValue || null,
+            icon: this.iconValue || null,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: this.confirmationButtonTextValue || 'Oui',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            inputValidator: (value) => {
+                return this.submitForm({
+                    'raisonsAnnulation': value
+                });
+            }
+        })
+    }
+
+    async submitForm(data) {
         if (!this.submitAsyncValue) {
             this.element.submit();
 
             return;
         }
 
-        const response = await fetch(this.element.action, {
+        const formData = new FormData(this.element);
+        for (const property in data) {
+            formData.append(property, data[property]);
+        }
+
+        await fetch(this.element.action, {
             method: this.element.method,
-            body: new URLSearchParams(new FormData(this.element))
+            body: new URLSearchParams(formData)
+        }).then(() => {
+            window.location.reload();
         });
     }
 }

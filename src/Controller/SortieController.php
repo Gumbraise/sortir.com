@@ -165,16 +165,6 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
-            $sortieRepository->remove($sortie, true);
-        }
-
-        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
-    }
-
     /**
      * @throws NonUniqueResultException
      */
@@ -190,22 +180,30 @@ class SortieController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['GET', 'POST'])]
-    public function annuler(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['POST'])]
+    public function annuler(
+        Request          $request,
+        Sortie           $sortie,
+        SortieRepository $sortieRepository,
+        EtatRepository   $etatRepository
+    )
     {
-        $form = $this->createForm(SortieAnnuleeType::class, $sortie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setEtat($etatRepository->findByLibelle("Annulée"));
-            $sortieRepository->save($sortie, true);
-
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        if (
+            !$sortie->getParticipants()->contains($this->getUser()) &&
+            $sortie->getOrganisateur() !== $this->getUser() &&
+            !$this->isGranted('ROLE_ADMIN')
+        ) {
+            return $this->redirectToRoute('app_sortie_index');
         }
 
-        return $this->renderForm('sortie/annuler.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-        ]);
+        try {
+            $sortie->setEtat($etatRepository->findByLibelle("Annulée"));
+            $sortie->setRaisonsAnnulation($request->request->get('raisonsAnnulation'));
+            $sortieRepository->save($sortie, true);
+
+            $this->addFlash('success', "La sortie $sortie a bien été annulée");
+        } catch (\Exception $e) {
+            $this->addFlash('danger', "Une erreur s'est produite.");
+        }
     }
 }
