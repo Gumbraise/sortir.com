@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" type="image/x-icon" href="{{ asset('images/static/favicon.ico') }}" />
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/static/favicon.ico') }}"/>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-    {% for message in app.flashes('success') %}
-        <div class="success-alert">
-            <strong>Success ! </strong> {{ message }}
-        </div>
-    {% endfor %}
-    {{ include('_includes/navbar.html.twig') }}
-        {% block body %}{% endblock %}
-    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+{% for message in app.flashes('success') %}
+    <div class="success-alert">
+        <strong>Success ! </strong> {{ message }}
+    </div>
+{% endfor %}
+{{ include('_includes/navbar.html.twig') }}
+{% block body %}{% endblock %}
+</body>
 </html>
