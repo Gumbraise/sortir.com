@@ -3,42 +3,37 @@
 {% block title %}Profil : {{ userData.pseudo }}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 500px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    .inline {
-        display: inline-flex;
-        place-content: space-between;
-        align-items: center;
-    }
-</style>
 
-<div class="example-wrapper">
-    <div style="display: flex; flex-direction: column; gap:5px;">
-        <img src="{{ vich_uploader_asset(userData, 'profilePictureFile') }}" alt="Image manquante" style="display:block;max-height: 250px;object-fit: contain"/>
-        <p>{{ userData.pseudo }}</p>
-        <div class="inline">
-            <label>Nom</label>
-            <p>{{ userData.nom }}</p>
-        </div>
-        <div class="inline">
-            <label>Prénom</label>
-            <p>{{ userData.prenom }}</p>
-        </div>
-        <div class="inline">
-            <label>Téléphone</label>
-            <p>{{ userData.telephone }}</p>
-        </div>
-        <div class="inline">
-            <label>E-Mail</label>
-            <p>{{ userData.email }}</p>
-        </div>
-        <div class="inline">
-            <label>Campus</label>
-            <p>{{ userData.campus }}</p>
-        </div>
-
-        <a href="{{ path('app_homepage') }}">Retour</a>
+<div class="f-profile">
+    <div class="f-head">
+        <img src="{{ vich_uploader_asset(userData, 'profilePictureFile') }}" alt="Image manquante"/>
+        <h1>{{ userData.pseudo }}</h1>
+    </div>
+    <div class="f-inline">
+        <label>Nom :</label>
+        <p>{{ userData.nom }}</p>
+    </div>
+    <div class="f-inline">
+        <label>Prénom :</label>
+        <p>{{ userData.prenom }}</p>
+    </div>
+    <div class="f-inline">
+        <label>Téléphone :</label>
+        <p>{{ userData.telephone }}</p>
+    </div>
+    <div class="f-inline">
+        <label>E-Mail :</label>
+        <p>{{ userData.email }}</p>
+    </div>
+    <div class="f-inline">
+        <label>Campus :</label>
+        <p>{{ userData.campus ?? 'Non-associé' }}</p>
+    </div>
+    <div class="f-inline f-button-container">
+        <a class="f-button f-button-secondary" href="{{ path('app_homepage') }}">&#10094; Retour</a>
+        {% if userData.id == app.user.id %}
+            <a class="f-button" href="{{ path('app_profil_edit') }}">Modifier son profil</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

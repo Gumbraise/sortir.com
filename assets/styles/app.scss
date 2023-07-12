@@ -1,3 +1,93 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+$primary-color: #65a30d;//green 600
+$primary-color-hover: #4d7c0f;//green 700
+$secondary-color: #94a3b8;//slate 400
+$secondary-color-hover: #64748b;//slate 500
+$dark: #020617;//slate 950
+$light: #f1f5f9;//slate 100
+
+
+.f-profile{
+  margin: 1em auto;
+  width: min(95%,500px);
+  font: 18px/1.5 $font-family-sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+
+  .f-inline {
+    display: inline-flex;
+    place-content: space-between;
+    align-items: center;
+  }
+
+  .f-head{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    text-align: center;
+    font-size: 25px;
+    margin:10px;
+  }
+
+  img{
+    display:block;
+    max-height: 250px;
+    object-fit: contain;
+  }
+
+  .f-button-container{
+    margin:20px;
+  }
+}
+
+.f-button{
+  outline: none;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: $primary-color;
+  color: $light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 2px;
+  border-color: $dark;
+  transition: linear 50ms;
+  font-size: 20px;
+}
+.f-button:hover{
+  background-color: $primary-color-hover;
+}
+.f-button:not(:disabled){
+  cursor:pointer;
+}
+.f-button:disabled{
+  cursor: not-allowed;
+}
+.f-button-secondary{
+  background-color: $secondary-color;
+}
+.f-button-secondary:hover{
+  background-color: $secondary-color-hover;
+}
+
+
+@media (max-width: 767px) {//mobile
+
+}
+
+@media (min-width: 768px) and (max-width: 991px) {//Tablette & small desk
+
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {//Desk Normal
+
+}
+
+@media (min-width: 1200px) {//Large
+
+}
