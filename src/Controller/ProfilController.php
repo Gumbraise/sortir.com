@@ -37,7 +37,7 @@ class ProfilController extends AbstractController
         ]);
     }
 
-    #[Route('edit', name: 'app_profil_edit')]
+    #[Route('/edit', name: 'app_profil_edit')]
     public function edit(
         Request                     $request,
         EntityManagerInterface      $entityManager,
@@ -55,16 +55,22 @@ class ProfilController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+//            $user->setPassword(
+//                $userPasswordHasher->hashPassword(
+//                    $user,
+//                    $form->get('plainPassword')->getData()
+//                )
+//            );
+            $userSave = $user;
+
+            $plainPassword = $form->get('plainPassword')->getData();
+            if(!empty($plainPassword)){
+                $user->setPassword($plainPassword);
+            }
 
             $entityManager->persist($user);
-            $entityManager->flush();
 
+            $entityManager->flush();
             $this->addFlash('success', 'Votre profil a bien été modifié.');
             return $this->redirectToRoute('app_profil_edit');
         }

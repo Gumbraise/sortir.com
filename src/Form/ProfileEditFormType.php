@@ -42,7 +42,7 @@ class ProfileEditFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/^[A-Za-z\s\'-]+$/',
+                        'pattern' => '/^[A-Za-z\s\'À-ÿ-]+$/u',
                         'message' => 'Votre prénom comporte des caractères non-autorisés.',
                     ]),
                 ],
@@ -52,7 +52,7 @@ class ProfileEditFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/^[A-Za-z\s\'-]+$/',
+                        'pattern' => '/^[A-Za-z\s\'À-ÿ-]+$/u',
                         'message' => 'Votre nom comporte des caractères non-autorisés.',
                     ]),
                 ],
@@ -63,8 +63,8 @@ class ProfileEditFormType extends AbstractType
                 'attr' => ['placeholder' => 'Ex : +33600000000'],
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/^\+(?:[0-9]?){6,14}[0-9]$/',
-                        'message' => 'Votre téléphone doit être au format international sans espaces.',
+                        'pattern' => '/^\+\d{2}\s?(?:\(\d\))?\d(?:\s?\d{2}){4}$/',
+                        'message' => 'Votre téléphone doit être au format international.',
                     ]),
                 ],
             ])
@@ -82,9 +82,6 @@ class ProfileEditFormType extends AbstractType
                         'label' => 'Mot de passe',
                         'attr' => ['autocomplete' => 'new-password'],
                         'constraints' => [
-                            new NotBlank([
-                                'message' => 'Please enter a password',
-                            ]),
                             new Length([
                                 'min' => 6,
                                 'minMessage' => 'Your password should be at least {{ limit }} characters',
@@ -97,9 +94,6 @@ class ProfileEditFormType extends AbstractType
                         'label' => 'Confirmation du mot de passe',
                         'attr' => ['autocomplete' => 'new-password'],
                         'constraints' => [
-                            new NotBlank([
-                                'message' => 'Please enter a password',
-                            ]),
                             new Length([
                                 'min' => 6,
                                 'minMessage' => 'Your password should be at least {{ limit }} characters',
@@ -110,7 +104,6 @@ class ProfileEditFormType extends AbstractType
                     ]
                 ]
             )
-            ->add('campus')
             ->add('profilePictureFile', VichImageType::class, [
                 'label' => 'Photo de profil',
                 'required' => false,

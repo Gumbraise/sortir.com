@@ -8,4 +8,9 @@
     {{ include('sortie/_form.html.twig') }}
 
     <a href="{{ path('app_sortie_index') }}">back to list</a>
+
+    <div>
+        <label>Il manque un lieu ?</label>
+        <a href="{{ path('app_lieu_add') }}">Ajoutez le !</a>
+    </div>
 {% endblock %}

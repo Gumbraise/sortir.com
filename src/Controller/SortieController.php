@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SearchSortieType;
+use App\Form\SortieAnnuleeType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,10 +64,14 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/new', name: 'app_sortie_new', methods: ['GET', 'POST'])]
     public function new(
         Request          $request,
-        SortieRepository $sortieRepository
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
     ): Response
     {
         $sortie = new Sortie();
@@ -73,7 +81,6 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $sortie->setCampus($this->getUser()->getCampus());
             $sortieRepository->save($sortie, true);
-
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -81,6 +88,17 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'form' => $form,
         ]);
+    }
+
+    public function getCurrentUser(): ?Participant
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof Participant) {
+            return null;
+        }
+
+        return $user;
     }
 
     #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
@@ -165,5 +183,37 @@ class SortieController extends AbstractController
         }
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/{id}/publier', name: 'app_sortie_publish', methods: ['GET', 'POST'])]
+    public function publish(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response{
+        $sortie->setEtat($etatRepository->findByLibelle('Ouverte'));
+        $sortieRepository->save($sortie,true);
+
+        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['GET', 'POST'])]
+    public function annuler(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository):Response{
+        $form = $this->createForm(SortieAnnuleeType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setEtat($etatRepository->findByLibelle("Annulée"));
+            $sortieRepository->save($sortie, true);
+
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('sortie/annuler.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
+        ]);
     }
 }
