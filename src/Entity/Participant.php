@@ -283,7 +283,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getProfilePictureName(): ?string
     {
-        return $this->profilePictureName;
+        return $this->profilePictureName ?? 'default-user.jpg';
     }
 
     /**

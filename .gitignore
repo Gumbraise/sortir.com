@@ -21,7 +21,12 @@
 
 
 .idea
+
+###> Profile pictrures ###
 public/images/pictures/*
+!public/images/pictures/default-user.jpg
+###< Profile pictrures ###
+
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
