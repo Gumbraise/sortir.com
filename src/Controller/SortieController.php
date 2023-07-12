@@ -8,8 +8,6 @@ use App\Entity\Sortie;
 use App\Form\SearchSortieType;
 use App\Form\SortieAnnuleeType;
 use App\Form\SortieType;
-use App\Repository\CampusRepository;
-use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,35 +23,43 @@ class SortieController extends AbstractController
     public function index(
         Request          $request,
         SortieRepository $sortieRepository,
-        CampusRepository $campusRepository,
     ): Response
     {
-        $sortie = new Sortie();
-        $form = $this->createForm(SearchSortieType::class, $sortie);
+        $form = $this->createForm(SearchSortieType::class);
         $form->handleRequest($request);
 
-        $campus = [];
-        $nom = null;
-        $dateHeureDebut = (new \DateTimeImmutable());
-        $dateLimiteInscription = (new \DateTimeImmutable("9999/12/31"));
+        $name = null;
+        $startDate = new \DateTimeImmutable('now');
+        $endDate = null;
+        $checkboxs = [
+            "isOrganisateur" => false,
+            "isInscrit" => true,
+            "isNotInscrit" => true,
+            "isPast" => false,
+        ];
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $campus = $form->get('campus')->getData() ?? $form->get('campus')->getData();
-            $dateHeureDebut = $form->get('dateHeureDebut')->getData() ?? $form->get('dateHeureDebut')->getData();
-            $dateLimiteInscription = $form->get('dateLimiteInscription')->getData() ?? $form->get('dateLimiteInscription')->getData();
-            $nom = $form->get('nom')->getData() ?? $form->get('nom')->getData();
+            $name = $form->get('nom')->getData();
+            $startDate = $form->get('dateStart')->getData();
+            $endDate = $form->get('dateEnd')->getData();
+            $checkboxs = [
+                "isOrganisateur" => $form->get('isOrganisateur')->getData(),
+                "isInscrit" => $form->get('isInscrit')->getData(),
+                "isNotInscrit" => $form->get('isNotInscrit')->getData(),
+                "isPast" => $form->get('isPast')->getData(),
+            ];
         }
 
         $sorties = $sortieRepository->search(
-            $campus,
-            $nom,
-            $dateHeureDebut,
-            $dateLimiteInscription,
+            $this->getUser(),
+            $name,
+            $startDate,
+            $endDate,
+            $checkboxs
         );
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'campuses' => $campusRepository->findAll(),
             'form' => $form->createView(),
         ]);
     }
@@ -73,8 +79,7 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setEtat($etatRepository->findByLibelle('Créée'));
-            $sortie->setOrganisateur($this->getCurrentUser());
+            $sortie->setCampus($this->getUser()->getCampus());
             $sortieRepository->save($sortie, true);
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
