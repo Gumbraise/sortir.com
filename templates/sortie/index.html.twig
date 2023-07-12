@@ -125,9 +125,6 @@
                                 Inscrits/Places
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Etat
-                            </th>
-                            <th scope="col" class="px-6 py-3">
                                 Inscrit
                             </th>
                             <th scope="col" class="px-6 py-3">
@@ -155,9 +152,6 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ sortie.participants|length ~ '/' ~ sortie.nbInscriptionMax }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ sortie.etat }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}
