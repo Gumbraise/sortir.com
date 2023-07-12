@@ -1,28 +1,80 @@
-<style>
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-    li {
-        display: inline;
-    }
-</style>
-
-<nav>
-    <ul>
-        <li>
-            <img src="{{ asset('images/static/sortircom.png') }}" alt="Logo Sortir.com" style="display:inline-block;max-height: 80px;object-fit: contain"/>
-        </li>
-        <li><a href="{{ path('app_homepage') }}">Accueil</a></li>
-        <li><a href="{{ path('app_sortie_index') }}">Sorties</a></li>
-        {% if app.user %}
-            <li><a href="{{ path('app_profil', {id:app.user.id}) }}">Mon profil</a></li>
-            {% if is_granted('ROLE_ADMIN') %} <li><a href="{{ path('admin') }}">Admin</a></li> {% endif %}
-            <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-        {% else %}
-            <li><a href="{{ path('app_login') }}">Se connecter</a></li>
-            <li><a href="{{ path('app_register') }}">S'inscrire</a></li>
-        {% endif %}
-    </ul>
+<nav class="bg-white border-gray-200">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="{{ path('app_homepage') }}" class="flex items-center">
+            <img src="{{ asset('images/static/sortircom.png') }}" alt="Logo Sortir.com" class="w-16"/>
+            <p class="sr-only">Sortir.com</p>
+        </a>
+        <button data-collapse-toggle="navbar-default" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                aria-controls="navbar-default" aria-expanded="false">
+            <span class="sr-only">Ouvrir le menu</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+        </button>
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
+                <li>
+                    <a
+                            href="{{ path('app_homepage') }}"
+                            class="block py-2 pl-3 pr-4 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0"
+                    >Accueil</a>
+                </li>
+                <li>
+                    <a
+                            href="{{ path('app_sortie_index') }}"
+                            class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                    >Sorties</a>
+                </li>
+                {% if app.user %}
+                    <li>
+                        <a
+                                href="{{ path('app_profil_own') }}"
+                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                        >Mon profil</a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li>
+                            <a
+                                    href="{{ path('admin') }}"
+                                    class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                            >Tableau de bord admin</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a
+                                href="{{ path('app_logout') }}"
+                                title="Se déconnecter"
+                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+                            </svg>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a
+                                href="{{ path('app_login') }}"
+                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                        >Se connecter</a>
+                    </li>
+                    <li>
+                        <a
+                                href="{{ path('app_register') }}"
+                                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0"
+                        >S'inscrire</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 </nav>
