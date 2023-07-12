@@ -1,6 +1,6 @@
 import {Controller} from '@hotwired/stimulus';
 import datepicker from 'js-datepicker';
-import 'js-datepicker/dist/datepicker.min.css';
+import 'js-datepicker/src/datepicker.scss';
 
 export default class extends Controller {
     static targets = ['date1', 'date2'];
