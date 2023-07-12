@@ -205,7 +205,7 @@ class SortieController extends AbstractController
             $this->addFlash('success', "La sortie $sortie a bien été annulée");
 
         } catch (\Exception $e) {
-            $this->addFlash('danger', "Une erreur s'est produite.");
+            $this->addFlash('error', "Une erreur s'est produite.");
         }
     }
 }
