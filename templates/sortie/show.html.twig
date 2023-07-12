@@ -3,92 +3,135 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+    <div class="container mx-auto space-y-16 py-8 px-4">
+        <div class="md:flex items-center justify-between text-assolem-dark space-y-8 md:space-y-0">
+            <h1 class="text-5xl md:text-7xl font-bold md:w-2/3 text-center md:text-left text-transparent bg-clip-text bg-gradient-to-br from-green-600 to-lime-400">
+                {{ sortie.nom }}
+            </h1>
+        </div>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Nom de la sortie :</th>
-            <td>{{ sortie.nom }}</td>
-        </tr>
-        <tr>
-            <th>Date et heure de la sortie :</th>
-            <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Date limite d'inscription :</th>
-            <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y H:i') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Nombre de places :</th>
-            <td>{{ sortie.nbInscriptionMax }}</td>
-        </tr>
-        <tr>
-            <th>Durée :</th>
-            <td>{{ sortie.duree }} minutes</td>
-        </tr>
-        <tr>
-            <th>Description et infos :</th>
-            <td>{{ sortie.infosSortie }}</td>
-        </tr>
-        <tr>
-            <th>Campus :</th>
-            <td>{{ sortie.campus.nom }}</td>
-        </tr>
-        <tr>
-            <th>Lieu :</th>
-            <td>{{ sortie.lieu }}</td>
-        </tr>
-        <tr>
-            <th>Rue :</th>
-            <td>{{ sortie.lieu.rue }}</td>
-        </tr>
-        <tr>
-            <th>Code postal :</th>
-            <td>{{ sortie.lieu.ville.codePostal }}</td>
-        </tr>
-        <tr>
-            <th>Latitude :</th>
-            <td>{{ sortie.lieu.latitude }}</td>
-        </tr>
-        <tr>
-            <th>Longitude :</th>
-            <td>{{ sortie.lieu.longitude }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div
-            style="height: 500px;"
-            {{ stimulus_controller('leaflet', {
-                latitude: sortie.lieu.latitude,
-                longitude: sortie.lieu.longitude,
-            }) }}
-    >
-
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="h-min space-y-6">
+                <div class="space-y-2">
+                    <h2 class="sr-only">
+                        Détails de la sortie
+                    </h2>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Début
+                        </div>
+                        <div class="p-4 self-center">
+                            {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') ~ " (" ~ sortie.dateHeureDebut|human_readable ~ ")" : '' }}
+                        </div>
+                    </div>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Date limite d'inscription
+                        </div>
+                        <div class="p-4 self-center">
+                            {{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y H:i') ~ " (" ~ sortie.dateLimiteInscription|human_readable ~ ")" : '' }}
+                        </div>
+                    </div>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Nombre de places
+                        </div>
+                        <div class="p-4 self-center">
+                            {{ sortie.nbInscriptionMax }}
+                        </div>
+                    </div>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Durée
+                        </div>
+                        <div class="p-4 self-center">
+                            {{ sortie.duree }} minutes
+                        </div>
+                    </div>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Description et infos
+                        </div>
+                        <div class="p-4 self-center">
+                            {{ sortie.infosSortie }}
+                        </div>
+                    </div>
+                    <div class="rounded-2xl w-full bg-green-700/10 flex flex-col md:flex-row border-2 border-green-700">
+                        <div class="self-auto flex items-center justify-center rounded-xl rounded-b-none md:rounded-r-none md:rounded-l-xl p-4 bg-green-700 text-white font-bold text-center w-full md:max-w-[12rem]">
+                            Campus
+                        </div>
+                        <div class="p-4 self-center">
+                            <a
+                                    href="{{ path('app_sortie_index') }}"
+                                    class="text-green-700 hover:text-green-800"
+                            >{{ sortie.campus.nom }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h2 class="text-2xl md:text-4xl font-bold w-full text-center md:text-left text-transparent bg-clip-text bg-gradient-to-br from-green-600 to-lime-400">
+                        Liste des participants
+                    </h2>
+                    <div class="w-full relative h-min space-y-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="w-full shadow-md rounded-lg">
+                            <table class="w-full text-sm text-left text-gray-500 table-auto">
+                                <thead class="text-xs text-gray-700 uppercase bg-green-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Pseudo
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Nom
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for participant in sortie.participants %}
+                                    <tr class="bg-white border-b">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                            <a
+                                                    class="font-semibold text-gray-800 hover:text-gray-900 cursor-pointer"
+                                                    href="{{ path('app_profil', {id:sortie.organisateur.id}) }}"
+                                            >{{ participant.pseudo }}</a>
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            <a
+                                                    class="text-gray-800 hover:text-gray-900 cursor-pointer"
+                                                    href="{{ path('app_profil', {id:sortie.organisateur.id}) }}"
+                                            >{{ participant.getFullname }}</a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr class="bg-white border-b">
+                                        <td class="px-6 py-4 text-center" colspan="8">Aucun participant</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div
+                        class="rounded-xl h-96"
+                        {{ stimulus_controller('leaflet', {
+                            latitude: sortie.lieu.latitude,
+                            longitude: sortie.lieu.longitude,
+                            lieu: sortie.lieu.nom,
+                            rue: sortie.lieu.rue,
+                            ville: sortie.lieu.ville,
+                        }) }}
+                >
+                </div>
+                <div class="w-full space-y-2">
+                    {{ include('_includes/sortieButtons.html.twig', {
+                        green: 'relative flex w-full justify-center rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer',
+                        blue: 'relative flex w-full justify-center rounded-md border border-transparent font-bold bg-blue-600 py-2 px-4 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer',
+                        red: 'relative flex w-full justify-center rounded-md border border-transparent font-bold bg-red-600 py-2 px-4 text-sm text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer',
+                    }) }}
+                </div>
+            </div>
+        </div>
     </div>
-    <h2>Liste des participants inscrits</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Pseudo</th>
-            <th>Nom</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for participant in sortie.participants %}
-            <tr>
-                <td>
-                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">
-                        {{ participant.pseudo }}
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">
-                        {{ participant.getFullname }}
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}

@@ -7,29 +7,33 @@ export default class extends Controller {
     static values = {
         'latitude': Number,
         'longitude': Number,
+        'lieu': String,
+        'rue': String,
+        'ville': String,
     };
 
     connect() {
         const map = L.map(this.element, {
-            center: [this.latitudeValue, this.longitudeValue],
-            zoom: 16,
+            center: [this.latitudeValue, this.longitudeValue], zoom: 16,
         })
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         const myIcon = L.icon({
             iconUrl: markerIconPng,
             iconSize: [25, 41],
             iconAnchor: [12.5, 41],
-            popupAnchor: [0, 0],
+            popupAnchor: [0, -41],
             tooltipAnchor: [0, 0]
 
         });
 
-        L.marker([this.latitudeValue, this.longitudeValue], {icon: myIcon}).addTo(map);
+        L.marker([this.latitudeValue, this.longitudeValue], {icon: myIcon})
+            .addTo(map)
+            .bindPopup(`<p class="text-center">${this.lieuValue}<br>${this.villeValue}<br>${this.rueValue}</p>`)
+            .openPopup();
     }
 
 }
