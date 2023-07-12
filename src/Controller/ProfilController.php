@@ -22,11 +22,11 @@ class ProfilController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->redirectToRoute('app_profil', ['id' => $this->getUser()->getId()]);
+        return $this->redirectToRoute('app_profil', ['pseudo' => $this->getUser()->getPseudo()]);
     }
 
 
-    #[Route('/{id}', name: 'app_profil', priority: -1)]
+    #[Route('/{pseudo}', name: 'app_profil', priority: -1)]
     public function index(
         Participant $participant
     ): Response

@@ -91,13 +91,13 @@
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                             <a
                                                     class="font-semibold text-gray-800 hover:text-gray-900 cursor-pointer"
-                                                    href="{{ path('app_profil', {id:participant.id}) }}"
+                                                    href="{{ path('app_profil', {pseudo:participant.pseudo}) }}"
                                             >{{ participant.pseudo }}</a>
                                         </th>
                                         <td class="px-6 py-4">
                                             <a
                                                     class="text-gray-800 hover:text-gray-900 cursor-pointer"
-                                                    href="{{ path('app_profil', {id:participant.id}) }}"
+                                                    href="{{ path('app_profil', {pseudo:participant.pseudo}) }}"
                                             >{{ participant.getFullname }}</a>
                                         </td>
                                     </tr>
