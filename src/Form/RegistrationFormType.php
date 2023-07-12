@@ -24,53 +24,58 @@ class RegistrationFormType extends AbstractType
             ->add('pseudo', TextType::class, [
                 'attr' => [
                     'placeholder' => "Votre pseudonyme"
-                ]
+                ],
+                'required' => true,
             ])
             ->add('nom', TextType::class, [
                 'attr' => [
                     'placeholder' => "Votre nom"
-                ]
+                ],
+                'required' => true,
             ])
             ->add('prenom', TextType::class, [
                 'attr' => [
                     'placeholder' => "Votre prénom"
-                ]
+                ],
+                'required' => true,
             ])
             ->add('telephone', TelType::class, [
                 'attr' => [
                     'placeholder' => "Votre numéro de téléphone"
-                ]
+                ],
+                'required' => true,
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
                     'placeholder' => "Votre adresse mail"
-                ]
+                ],
+                'required' => true,
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'J\'accepte les termes et conditions',
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les termes et conditions.',
                     ]),
                 ],
+                'required' => true,
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [
                     'attr' => [
-                        'autocomplete' => 'new-password',
+                        'autocomplete' => 'password',
                     ],
                 ],
                 'first_options' => [
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Please enter a password',
+                            'message' => 'Entrez un mot de passe valide',
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
-                            // max length allowed by Symfony for security reasons
+                            'minMessage' => 'Votre mot de passe doit au moins avoir {{ limit }} caractères.',
                             'max' => 4096,
                         ]),
                     ],
@@ -85,10 +90,9 @@ class RegistrationFormType extends AbstractType
                         'placeholder' => "Répétez votre mot de passe",
                     ]
                 ],
-                'invalid_message' => 'The password fields must match.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                'invalid_message' => 'Les mots de passes doivent être les mêmes.',
                 'mapped' => false,
+                'required' => true,
             ]);
     }
 
