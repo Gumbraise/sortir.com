@@ -132,6 +132,43 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface, 
         ] = unserialize($serialized);
     }
 
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'password' => $this->password,
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            'telephone' => $this->telephone,
+            'actif' => $this->actif,
+            'campus' => $this->campus,
+            'sortiesOrganisees' => $this->sortiesOrganisees,
+            'sorties' => $this->sorties,
+            'updatedAt' => $this->updatedAt,
+            'pseudo' => $this->pseudo,
+        ];
+    }
+
+    public function __unserialize(array $serialized)
+    {
+        $this->id = $serialized['id'];
+        $this->email = $serialized['email'];
+        $this->roles = $serialized['roles'];
+        $this->password = $serialized['password'];
+        $this->nom = $serialized['nom'];
+        $this->prenom = $serialized['prenom'];
+        $this->telephone = $serialized['telephone'];
+        $this->actif = $serialized['actif'];
+        $this->campus = $serialized['campus'];
+        $this->sortiesOrganisees = $serialized['sortiesOrganisees'];
+        $this->sorties = $serialized['sorties'];
+        $this->updatedAt = $serialized['updatedAt'];
+        $this->pseudo = $serialized['pseudo'];
+        return $this;
+    }
+
 
     public function getId(): ?int
     {

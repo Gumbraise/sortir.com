@@ -40,8 +40,7 @@ class ProfilController extends AbstractController
     #[Route('/edit', name: 'app_profil_edit')]
     public function edit(
         Request                     $request,
-        EntityManagerInterface      $entityManager,
-        UserPasswordHasherInterface $userPasswordHasher
+        EntityManagerInterface      $entityManager
     ): Response
     {
         if (!$this->getUser()) {
@@ -55,12 +54,6 @@ class ProfilController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $user->setPassword(
-//                $userPasswordHasher->hashPassword(
-//                    $user,
-//                    $form->get('plainPassword')->getData()
-//                )
-//            );
             $userSave = $user;
 
             $plainPassword = $form->get('plainPassword')->getData();
