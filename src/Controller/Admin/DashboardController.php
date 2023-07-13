@@ -45,11 +45,35 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('Campus', 'fa fa-home', Campus::class);
-        yield MenuItem::linkToCrud('Etats des sorties', 'fa fa-home', Etat::class);
-        yield MenuItem::linkToCrud('Lieux', 'fa fa-home', Lieu::class);
-        yield MenuItem::linkToCrud('Participants', 'fa fa-user', Participant::class);
-        yield MenuItem::linkToCrud('Sortie', 'fa fa-home', Sortie::class);
-        yield MenuItem::linkToCrud('Ville', 'fa fa-home', Ville::class);
+
+        yield MenuItem::section('Sorties');
+        yield MenuItem::subMenu('Sorties', 'fa fa-map-marker-alt')->setSubItems([
+            MenuItem::linkToCrud('Toutes les sorties', 'fa fa-map-marker-alt', Sortie::class),
+            MenuItem::linkToCrud('Ajouter une sortie', 'fa fa-plus', Sortie::class)
+                ->setAction('new'),
+        ]);
+        yield MenuItem::subMenu('Lieux', 'fa fa-map-marker-alt')->setSubItems([
+            MenuItem::linkToCrud('Tous les lieux', 'fa fa-map-marker-alt', Lieu::class),
+            MenuItem::linkToCrud('Ajouter un lieu', 'fa fa-plus', Lieu::class)
+                ->setAction('new'),
+        ]);
+        yield MenuItem::subMenu('Ville', 'fa fa-map-marker-alt')->setSubItems([
+            MenuItem::linkToCrud('Toutes les villes', 'fa fa-map-marker-alt', Ville::class),
+            MenuItem::linkToCrud('Ajouter une ville', 'fa fa-plus', Ville::class)
+                ->setAction('new'),
+        ]);
+        yield MenuItem::linkToCrud('Etats des sorties', 'fa fa-check-square', Etat::class);
+
+        yield MenuItem::section('Utilisateurs');
+        yield MenuItem::subMenu('Participants', 'fa fa-users')->setSubItems([
+            MenuItem::linkToCrud('Tous les participants', 'fa fa-user', Participant::class),
+            MenuItem::linkToCrud('Ajouter un prticipant', 'fa fa-plus', Participant::class)
+                ->setAction('new'),
+        ]);
+        yield MenuItem::subMenu('Campus', 'fa fa-school')->setSubItems([
+            MenuItem::linkToCrud('Tous les participants', 'fa fa-school', Campus::class),
+            MenuItem::linkToCrud('Ajouter un prticipant', 'fa fa-plus', Campus::class)
+                ->setAction('new'),
+        ]);
     }
 }
