@@ -8,4 +8,4 @@ vich_uploader:
             namer:
                 service: Vich\UploaderBundle\Naming\HashNamer
                 options: { algorithm: 'sha256', length: 50 }
-            delete_on_remove: true
+            delete_on_remove: false
