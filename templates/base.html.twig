@@ -12,17 +12,11 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body>
-{% for type, messages in app.flashes %}
-    {% for message in messages %}
-        <div
-                {{ stimulus_controller('notyf',{
-                    type: type,
-                    text: message
-                }) }}
-        ></div>
-    {% endfor %}
-{% endfor %}
+<body
+        {{ stimulus_controller('notyf', {
+            flashes: app.flashes|json_encode
+        }) }}
+>
 {{ include('_includes/navbar.html.twig') }}
 {% block body %}{% endblock %}
 </body>
