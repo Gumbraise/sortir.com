@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\SearchSortieType;
 use App\Form\SortieAnnuleeType;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;

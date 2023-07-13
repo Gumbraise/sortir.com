@@ -56,7 +56,7 @@ class SortieRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s')
             ->orderBy('s.dateHeureDebut', 'DESC');
 
-        if ($user->getCampus()) {
+        if ($user?->getCampus()) {
             $qb->andWhere('s.campus = :campus')
                 ->setParameter('campus', $user->getCampus());
         }

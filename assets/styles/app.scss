@@ -46,7 +46,7 @@ $lightgrey: #cbd5e1;//slate 300
     order:50;//Pour s'assurer qu'il soit à la fin
   }
 }
-form[name="profile_edit_form"]{
+form[name="profile_edit_form"],form[name="lieu"] {
   display:flex;
   flex-direction: column;
   gap:5px;
@@ -69,6 +69,22 @@ form[name="profile_edit_form"]{
     &:focus{
       outline: none;
       background-color: $lightgrey;
+    }
+  }
+  select {
+    appearance: none;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    width: 200px;
+    max-width: 100%;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #aaa;
     }
   }
 }

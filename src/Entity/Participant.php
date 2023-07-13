@@ -9,9 +9,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -21,7 +23,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte avec cet email')]
 #[UniqueEntity(fields: ['pseudo'], message: 'Il y a déjà un compte avec ce pseudo')]
-class Participant implements UserInterface, PasswordAuthenticatedUserInterface
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -62,10 +64,12 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $sorties;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Ignore]
     private $profilePictureName;
 
     #[Vich\UploadableField(mapping: 'profile_picture', fileNameProperty: 'profilePictureName')]
     #[Assert\File(maxSize: '8192k', mimeTypes: ["image/jpeg", "image/png", "image/gif"])]
+    #[Ignore]
     private $profilePictureFile;
 
     #[ORM\Column]
@@ -89,6 +93,45 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sortiesOrganisees = new ArrayCollection();
         $this->sorties = new ArrayCollection();
     }
+    public function serialize(): string
+    {
+        return serialize([
+            $this->id,
+            $this->email,
+            $this->roles,
+            $this->password,
+            $this->nom,
+            $this->prenom,
+            $this->telephone,
+            $this->actif,
+            $this->campus,
+            $this->sortiesOrganisees,
+            $this->sorties,
+            $this->updatedAt,
+            $this->pseudo,
+            // Exclude the $profilePictureName and $profilePictureFile properties
+        ]);
+    }
+
+    public function unserialize($serialized): void
+    {
+        [
+            $this->id,
+            $this->email,
+            $this->roles,
+            $this->password,
+            $this->nom,
+            $this->prenom,
+            $this->telephone,
+            $this->actif,
+            $this->campus,
+            $this->sortiesOrganisees,
+            $this->sorties,
+            $this->updatedAt,
+            $this->pseudo,
+        ] = unserialize($serialized);
+    }
+
 
     public function getId(): ?int
     {
@@ -309,7 +352,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      * @param $profilePictureFile
      * @return $this
      */
-    public function setProfilePictureFile($profilePictureFile): static
+    public function setProfilePictureFile(File $profilePictureFile = null): static
     {
         $this->profilePictureFile = $profilePictureFile;
 
