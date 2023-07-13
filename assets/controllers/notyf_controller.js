@@ -5,7 +5,9 @@ import 'notyf/notyf.min.css';
 
 export default class extends Controller {
     static values = {
-        flashes: Object,
+        flashes: {
+            type: "object" | "array",
+        },
     }
 
     connect() {
@@ -23,12 +25,14 @@ export default class extends Controller {
             }]
         });
 
-        for (const type in this.flashesValue) {
-            this.flashesValue[type].forEach(message => {
-                notyf.open({
-                    type, message
-                });
-            })
+        if (typeof this.flashesValue === "object") {
+            for (const type in this.flashesValue) {
+                this.flashesValue[type].forEach(message => {
+                    notyf.open({
+                        type, message
+                    });
+                })
+            }
         }
     }
 }
