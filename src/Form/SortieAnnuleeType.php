@@ -14,7 +14,7 @@ class SortieAnnuleeType extends AbstractType
     {
         $builder
             ->add('raisonsAnnulation',TextareaType::class ,[
-                'label' => 'Raisons d\'annulation',
+                'label' => 'Raisons d\'annulation : *',
                 'required' => true,
             ])
         ;

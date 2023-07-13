@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 $font-family-sans-serif: Arial, Helvetica, sans-serif;
-$primary-color: #65a30d;//green 600
-$primary-color-hover: #4d7c0f;//green 700
+$primary-color: #16a34a;//green 600
+$primary-color-hover: #15803d;//green 700
 $secondary-color: #94a3b8;//slate 400
 $secondary-color-hover: #64748b;//slate 500
 $dark: #020617;//slate 950
@@ -12,13 +12,13 @@ $light: #f1f5f9;//slate 100
 $lightgrey: #cbd5e1;//slate 300
 
 
-.f-profile{
+.f-form {
   margin: 1em auto;
-  width: min(95%,500px);
+  width: min(95%, 500px);
   font: 18px/1.5 $font-family-sans-serif;
   display: flex;
   flex-direction: column;
-  gap:10px;
+  gap: 10px;
 
   .f-inline {
     display: inline-flex;
@@ -26,27 +26,45 @@ $lightgrey: #cbd5e1;//slate 300
     align-items: center;
   }
 
-  .f-head{
+  .f-head {
     display: flex;
     flex-direction: column;
-    gap:20px;
+    gap: 20px;
     text-align: center;
     font-size: 25px;
-    margin:10px;
+    margin: 10px;
   }
 
-  img{
-    display:block;
+  img {
+    display: block;
     max-height: 250px;
     object-fit: contain;
   }
 
-  .f-button-container{
-    margin:20px;
-    order:50;//Pour s'assurer qu'il soit à la fin
+  .f-button-container {
+    margin: 20px;
+    order: 50; //Pour s'assurer qu'il soit à la fin
+    display: inline-flex;
+    place-content: space-evenly;
+    align-items: center;
+    width: 100%;
+  }
+
+  .f-sublink {
+    order: 49;
+    display: inline-flex;
+    place-content: space-between;
+    align-items: center;
+    width: 100%;
+    a:hover {
+      text-decoration: underline;
+      transition-delay: 10ms;
+      transition-duration: 100ms;
+      transition-timing-function: linear;
+    }
   }
 }
-form[name="profile_edit_form"],form[name="lieu"] {
+form[name="profile_edit_form"],form[name="lieu"],form[name="ville"],form[name="sortie"] > div:not(.f-button-container):not(.f-sublink){
   display:flex;
   flex-direction: column;
   gap:5px;
@@ -55,7 +73,7 @@ form[name="profile_edit_form"],form[name="lieu"] {
     place-content: space-between;
     align-items: center;
   }
-  input[type=text],input[type=email],input[type=password]{
+  input[type=text],input[type=email],input[type=password],textarea,input[type=number]{
     outline: none;
     padding: 8px;
     border-radius: 5px;
@@ -72,20 +90,24 @@ form[name="profile_edit_form"],form[name="lieu"] {
     }
   }
   select {
-    appearance: none;
-    background-color: transparent;
-    border: 1px solid #ccc;
+    appearance: auto;
+    outline: none;
     padding: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    width: 200px;
-    max-width: 100%;
+    border-radius: 5px;
+    background-color: $light;
+    border-width: 2px;
+    border-color: $dark;
+    width: fit-content;
+    max-width: 220px;
     cursor: pointer;
-
+    text-overflow: ellipsis;
     &:focus {
       outline: none;
-      border-color: #aaa;
+      border-color: $lightgrey;
     }
+  }
+  #sortie_organisateur,label[for="sortie_organisateur"]{
+    display: none;
   }
 }
 
@@ -120,7 +142,7 @@ form[name="profile_edit_form"],form[name="lieu"] {
 }
 
 @media (max-width: 767px) {//mobile
-  form[name="profile_edit_form"],form[name="lieu"]{
+  form[name="profile_edit_form"],form[name="lieu"],form[name="ville"],form[name="sortie"]{
     > div{
       display: flex;
       flex-direction: column;

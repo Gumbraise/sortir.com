@@ -1,16 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sortie{% endblock %}
+{% block title %}Nouvelle sortie{% endblock %}
 
 {% block body %}
-    <h1>Create new Sortie</h1>
+    <div class="f-form">
+        <div class="f-head">
+            <h1>Ajouter une nouvelle sortie</h1>
+        </div>
 
-    {{ include('sortie/_form.html.twig') }}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="f-sublink">
+            <label>Il manque un lieu ?</label>
+            <a href="{{ path('app_lieu_add') }}">Ajoutez le !</a>
+        </div>
+        <div class="f-button-container">
+            <a class="f-button f-button-secondary" href="{{ path('app_sortie_index') }}">Annuler</a>
+            <button class="f-button" type="submit">Créer</button>
+        </div>
+        {{ form_end(form) }}
 
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
-
-    <div>
-        <label>Il manque un lieu ?</label>
-        <a href="{{ path('app_lieu_add') }}">Ajoutez le !</a>
     </div>
 {% endblock %}

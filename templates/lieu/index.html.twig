@@ -4,22 +4,21 @@
 
 
 {% block body %}
-    <div class="f-profile">
+    <div class="f-form">
         <div class="f-head">
             <h1>Ajouter un nouveau lieu</h1>
         </div>
 
         {{ form_start(form) }}
-
+        <div class="f-sublink">
+            <label>Il manque une ville ?</label>
+            <a href="{{ path('app_ville_add') }}">Ajoutez la !</a>
+        </div>
         <div class="f-button-container">
             <a class="f-button f-button-secondary" href="{{ path('app_sortie_new') }}">Annuler</a>
             <button class="f-button" type="submit">Enregistrer</button>
         </div>
         {{ form_end(form) }}
 
-    </div>
-    <div>
-        <label>Il manque une ville ?</label>
-        <a href="{{ path('app_ville_add') }}">Ajoutez la !</a>
     </div>
 {% endblock %}
