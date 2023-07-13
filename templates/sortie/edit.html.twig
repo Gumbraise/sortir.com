@@ -1,11 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Sortie{% endblock %}
+{% block title %}Modifier une sortie{% endblock %}
 
 {% block body %}
-    <h1>Edit Sortie</h1>
+    <div class="f-form">
+        <div class="f-head">
+            <h1>Modifier une sortie</h1>
+        </div>
 
-    {{ include('sortie/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="f-button-container">
+            <a class="f-button f-button-secondary" href="{{ path('app_sortie_index') }}">Annuler</a>
+            <button class="f-button" type="submit">Modifier</button>
+        </div>
+        {{ form_end(form) }}
 
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
+    </div>
 {% endblock %}
