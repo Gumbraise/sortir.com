@@ -5,7 +5,7 @@
 <div style="max-width: 28rem; margin-left: auto; margin-right: auto; text-align: center; padding: 0 .5rem;">
 
     <div style="padding: 2rem; text-align: center;">
-        <img src="{{ app.request.schemeAndHttpHost }}{{ asset('images/static/sortircom.png') }}" alt="Logo de Sortir.com" style="margin-left: auto; margin-right: auto; width: 8rem;">
+        <img src="{{ app.request.schemeAndHttpHost ?? "http://localhost:8000/" }}{{ asset('images/static/sortircom.png') }}" alt="Logo de Sortir.com" style="margin-left: auto; margin-right: auto; width: 8rem;">
         <h1 style="margin: 0 0 1rem 0; font-size: 22px">Votre désinscription à la sortie {{ sortie.nom }} a bien été prise en compte !</h1>
         <p style="margin: 1rem 0;">
             Cordialement,<br>
@@ -17,7 +17,7 @@
     <div style="padding: 2rem 0 10rem 0; color: #7e8296; font-size: 0.75rem; line-height: 1rem;">
         <p>
             <strong>
-                <a href="{{ app.request.schemeAndHttpHost }}"
+                <a href="{{ app.request.schemeAndHttpHost ?? "http://localhost:8000/" }}"
                    style="color: #7e8296; text-decoration: none;"
                 >Sortir.com
                 </a>
