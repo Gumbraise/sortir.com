@@ -88,7 +88,10 @@ class SortieController extends AbstractController
             $sortie->setOrganisateur($this->getUser());
             $sortie->setEtat($etatRepository->findByLibelle('Créée'));
             $sortieRepository->save($sortie, true);
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+
+            $this->addFlash('success', 'Votre sortie a bien été créée !');
+
+            return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('sortie/new.html.twig', [
@@ -218,6 +221,8 @@ class SortieController extends AbstractController
                         ['sortie' => $sortie]
                     );
                 }
+
+                $this->addFlash('success', 'Votre sortie a bien été modifiée !');
             } catch (\Exception $e) {
                 $this->addFlash('error', "Une erreur s'est produite.");
             } catch (TransportExceptionInterface $e) {
@@ -225,7 +230,7 @@ class SortieController extends AbstractController
             }
 
 
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('sortie/edit.html.twig', [
@@ -247,7 +252,9 @@ class SortieController extends AbstractController
         $sortie->setEtat($etatRepository->findByLibelle('Ouverte'));
         $sortieRepository->save($sortie, true);
 
-        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('success', 'Votre sortie a bien été publiée !');
+
+        return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['POST'])]
