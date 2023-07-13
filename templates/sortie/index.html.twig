@@ -3,85 +3,195 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
-    <h2>Filtrer les sorties</h2>
-    {{ form_start(form, {
-        attr: {
-            'data-controller': 'datepicker',
-        }
-    }) }}
-    {{ form_row(form.nom) }}
-    {{ form_row(form.dateStart, {
-        attr: {
-            'data-datepicker-target': 'date1',
-        }
-    }) }}
-    {{ form_row(form.dateEnd, {
-        attr: {
-            'data-datepicker-target': 'date2',
-        }
-    }) }}
-    <button {{ stimulus_action('datepicker', 'resetDate') }}>Reset date</button>
-    <button>Rechercher</button>
-    {{ form_end(form) }}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Clôture</th>
-            <th>Inscrits/Places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
-                <td>{{ sortie.participants|length ~ '/' ~ sortie.nbInscriptionMax }}</td>
-                <td>{{ sortie.etat }}</td>
-                <td>{{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}</td>
-                <td>
-                    <a href="{{ path('app_profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur.getFullname }}</a>
-                </td>
-                <td>
-                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
-                    {% if app.user == sortie.organisateur or is_granted('ROLE_ADMIN') %}
-                        <span> - </span>
-                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
-                        {% if sortie.etat == 'Créée' %}
-                            <span> - </span>
-                            <a href="{{ path('app_sortie_publish', {'id': sortie.id}) }}">Publier</a>
-                        {% elseif sortie.etat == 'Ouverte' %}
-                            <span> - </span>
-                            <a href="{{ path('app_sortie_annuler', {'id': sortie.id}) }}">Annuler</a>
-                        {% endif %}
-                    {% else %}
-                        {% if not sortie.participants.contains(app.user)
-                            and date(sortie.dateLimiteInscription) > date()
-                            and sortie.etat == "Ouverte"
-                            and sortie.participants|length < sortie.nbInscriptionMax %}
-                            <span> - </span>
-                            <a href="{{ path('app_sortie_inscription', {'id': sortie.id}) }}">S'inscrire</a>
-                        {% elseif sortie.participants.contains(app.user) %}
-                            <span> - </span>
-                            <a href="{{ path('app_sortie_desinscription', {'id': sortie.id}) }}">Se désister</a>
-                        {% endif %}
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">Il n'y a pas de sorties de prévues</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% if app.user %}
-        <a href="{{ path('app_sortie_new') }}">Créer une sortie</a>
-    {% endif %}
+    <div class="container mx-auto space-y-16 py-8 px-4">
+        <div class="md:flex items-center justify-between text-assolem-dark space-y-8 md:space-y-0">
+            <h1 class="text-5xl md:text-7xl font-bold md:w-2/3 text-center md:text-left text-transparent bg-clip-text bg-gradient-to-br from-green-600 to-lime-400">
+                Prochaines sorties
+            </h1>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <div
+                    class="sticky top-4 h-min w-full col-span-1 lg:col-span-2 xl:col-span-1 space-y-2"
+                    {{ stimulus_controller('dropdown') }}
+            >
+                <button
+                        class="lg:hidden relative flex w-full justify-center rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        {{ stimulus_action('dropdown', 'drop') }}
+                >
+                    Filtrer
+                </button>
+                <div
+                        class="relative shadow-md rounded-lg p-6 overflow-visible hidden lg:block"
+                        {{ stimulus_target('dropdown', 'dropdown') }}
+                >
+                    <h2 class="sr-only">Filtrer les sorties</h2>
+                    {{ form_start(form, {
+                        attr: {
+                            'data-controller': 'datepicker',
+                        }
+                    }) }}
+                    <div class="space-y-4">
+                        <div>
+                            <span class="sr-only">{{ form_label(form.nom) }}</span>
+                            {{ form_widget(form.nom, {
+                                'attr': {
+                                    'class': 'w-full rounded-xl px-3 py-2 focus:ring-0 focus:outline-none border border-gray-400 focus:border-gray-600',
+                                }
+                            }) }}
+                        </div>
+                        <div class="py-4 border-t-2 border-b-2 border-gray-200 flex flex-col gap-2">
+                            <div class="flex gap-2">
+                                <label for="search_sortie_dateStart"
+                                       class="flex items-center text-gray-800 cursor-pointer">
+                                    Entre le&nbsp;
+                                    <span
+                                            class="text-gray-900 underline"
+                                            {{ stimulus_target('datepicker', 'labelDateStart') }}
+                                    >{{ "now"|date('d/m/Y') }}</span>
+                                </label>
+                                {{ form_widget(form.dateStart, {
+                                    attr: {
+                                        'data-datepicker-target': 'dateStart',
+                                        'class': 'sr-only',
+                                    }
+                                }) }}
+                            </div>
+                            <div class="flex gap-2">
+                                <label for="search_sortie_dateEnd"
+                                       class="flex items-center text-gray-800 cursor-pointer">
+                                    et le&nbsp;
+                                    <span
+                                            class="text-gray-900 underline"
+                                            {{ stimulus_target('datepicker', 'labelDateEnd') }}
+                                    >--/--/----</span>
+                                </label>
+                                {{ form_widget(form.dateEnd, {
+                                    attr: {
+                                        'data-datepicker-target': 'dateEnd',
+                                        'class': 'sr-only',
+                                    }
+                                }) }}
+                            </div>
+                            <div>
+                                {{ form_widget(form.isOrganisateur) }}
+                                <span class="">{{ form_label(form.isOrganisateur) }}</span>
+                            </div>
+                            <div>
+                                {{ form_widget(form.isInscrit) }}
+                                <span class="">{{ form_label(form.isInscrit) }}</span>
+                            </div>
+                            <div>
+                                {{ form_widget(form.isNotInscrit) }}
+                                <span class="">{{ form_label(form.isNotInscrit) }}</span>
+                            </div>
+                            <div>
+                                {{ form_widget(form.isPast) }}
+                                <span class="">{{ form_label(form.isPast) }}</span>
+                            </div>
+                        </div>
+                        <div class="font-bold bg-white flex flex-col gap-4">
+                            <button
+                                    class="relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                    type="submit"
+                            >Appliquer les filtres
+                            </button>
+                            <button
+                                    class="text-gray-600 hover:text-gray-700"
+                                    {{ stimulus_action('datepicker', 'resetForm') }}
+                            >Réinitialiser
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <div class="w-full relative lg:col-span-3 xl:col-span-4 h-min space-y-2">
+                <div class="overflow-x-auto shadow-md rounded-lg">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-green-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Nom de la sortie
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Date de la sortie
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Clôture
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Inscrits/Places
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Inscrit
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Organisateur
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for sortie in sorties %}
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    <a
+                                            class="text-gray-800 hover:text-gray-900 cursor-pointer"
+                                            href="{{ path('app_sortie_show', {'id': sortie.id}) }}"
+                                    >{{ sortie.nom }}</a>
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ sortie.participants|length ~ '/' ~ sortie.nbInscriptionMax }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ sortie.participants.contains(app.user) ? "Oui" : "Non" }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a
+                                            class="text-gray-800 hover:text-gray-900 cursor-pointer"
+                                            href="{{ path('app_profil', {pseudo:sortie.organisateur.pseudo}) }}"
+                                    >
+                                    <span class="inline-flex items-baseline">
+                                        <img src="{{ vich_uploader_asset(sortie.organisateur, 'profilePictureFile') }}"
+                                             alt="Photo de profil de {{ sortie.organisateur }}"
+                                             class="self-center w-5 h-5 rounded-full mx-1"/>
+                                        <span>{{ sortie.organisateur.getFullname }}</span>
+                                    </span>
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 text-right flex flex-col">
+                                    <a
+                                            class="text-gray-500 hover:text-gray-600 cursor-pointer"
+                                            href="{{ path('app_sortie_show', {'id': sortie.id}) }}"
+                                    >Afficher</a>
+                                    {{ include('_includes/sortieButtons.html.twig') }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr class="bg-white border-b">
+                                <td class="px-6 py-4 text-center" colspan="8">Aucune sortie n'a été trouvée</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a
+                        class="relative flex w-full justify-center rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        href="{{ path('app_sortie_new') }}"
+                >
+                    Créer une sortie
+                </a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

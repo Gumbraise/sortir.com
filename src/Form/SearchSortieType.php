@@ -17,15 +17,20 @@ class SearchSortieType extends AbstractType
         $builder
             ->add('nom', SearchType::class, [
                 'label' => 'Le nom de la sortie contient :',
+                'attr' => [
+                    'placeholder' => "Rechercher dans le nom",
+                ],
                 'required' => false,
             ])
             ->add('dateStart', DateTimeType::class, [
+                'label'=> "Entre le ",
                 'widget' => 'single_text',
                 'html5' => false,
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('dateEnd', DateTimeType::class, [
+                'label'=> "et le ",
                 'widget' => 'single_text',
                 'html5' => false,
                 'mapped' => false,
@@ -52,8 +57,7 @@ class SearchSortieType extends AbstractType
                 'label' => 'Sorties passées',
                 'mapped' => false,
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

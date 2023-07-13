@@ -3,22 +3,30 @@ import datepicker from 'js-datepicker';
 import 'js-datepicker/src/datepicker.scss';
 
 export default class extends Controller {
-    static targets = ['date1', 'date2'];
+    static targets = ['dateStart', 'dateEnd', 'labelDateStart', 'labelDateEnd'];
 
     connect() {
-        datepicker(this.date1Target, {
-            id: 1, onSelect: (instance, date) => {
-                this.changeDate(this.date1Target, date);
-            }, minDate: new Date(), sibling: this.date2Target,
-        })
-        datepicker(this.date2Target, {
+        datepicker(this.dateStartTarget, {
             id: 1, onSelect: instance => {
-                this.changeDate(this.date2Target, instance.dateSelected);
-            }, minDate: new Date(), sibling: this.date1Target,
+                this.changeDate(this.dateStartTarget, instance.dateSelected, 'start');
+            }, minDate: new Date(), sibling: this.dateEndTarget,
+        })
+        datepicker(this.dateEndTarget, {
+            id: 1, onSelect: instance => {
+                this.changeDate(this.dateEndTarget, instance.dateSelected, 'end');
+            }, minDate: new Date(), sibling: this.dateStartTarget,
         })
     }
 
-    changeDate(target, instance) {
+    changeDate(target, instance, dateType) {
+        switch (dateType) {
+            case 'start':
+                this.labelDateStartTarget.innerText = this.date_ddmmyyyy(instance);
+                break;
+            case 'end':
+                this.labelDateEndTarget.innerText = this.date_ddmmyyyy(instance);
+                break;
+        }
         target.value = this.formattedDate(instance);
     }
 
@@ -32,10 +40,22 @@ export default class extends Controller {
         return year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
     }
 
-    resetDate(event) {
+    date_ddmmyyyy(date) {
+        let year = date.getFullYear();
+        let month = (date.getMonth() + 1).toString().padStart(2, "0"); // Mois (valeurs de 01 à 12)
+        let day = date.getDate().toString().padStart(2, "0"); // Jour (valeurs de 01 à 31)
+
+        return day + "/" + month + "/" + year;
+    }
+
+    resetForm(event) {
         event.preventDefault();
 
-        this.date1Target.value = '';
-        this.date2Target.value = '';
+        let inputs = this.element.getElementsByTagName('input');
+
+        for (let input of inputs) {
+            input.value = ''
+        }
+        this.labelDateEndTarget.innerText = '--/--/----';
     }
 }

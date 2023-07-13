@@ -1,20 +1,337 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomepageController!{% endblock %}
+{% block title %}Sortie index{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="pb-24 md:py-24">
+        <main>
+            <div class="container px-6 py-16 mx-auto">
+                <div class="items-center lg:flex">
+                    <div class="w-full lg:w-2/3">
+                        <h1 class="text-5xl font-black text-gray-800 lg:text-7xl">Le meilleur endroit pour <br> vos
+                            <span class="text-transparent bg-clip-text bg-gradient-to-br from-green-600 to-lime-400">Sorties</span>
+                            !</h1>
 
-<div class="example-wrapper">
-    <h1>Hello ! ✅</h1>
+                        <p class="my-6 text-gray-600 lg:max-w-lg">Explorez un univers infini d'expériences palpitantes
+                            et de
+                            découvertes exceptionnelles. Trouvez les sorties qui éveilleront votre curiosité et créeront
+                            des souvenirs mémorables, juste à votre porte, grâce à Sortir.com !</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/kelli/Github Desktop/sortir/src/Controller/HomepageController.php'|file_link(0) }}">src/Controller/HomepageController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/kelli/Github Desktop/sortir/templates/homepage/index.html.twig'|file_link(0) }}">templates/homepage/index.html.twig</a></code></li>
-    </ul>
-</div>
+                        <a class="relative flex justify-center lg:inline w-auto rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
+                           href="{{ app.user ? path('app_sortie_index') : path('app_register') }}"
+                        >Commencer l'aventure</a>
+                    </div>
+
+                    <div class="flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/3 relative">
+                        <div class="absolute inset-0 -z-[1] overflow-hidden blur-[100px] select-none pointer-events-none">
+                            <div class="top-3/5 left-3/5 w-[1000px] h-[1000px] -z-[2] bg-green-500 absolute rounded-full animate-pulsions"></div>
+                        </div>
+                        <img class="w-full h-full lg:max-w-3xl"
+                             src="{{ asset('images/static/undraw_nature_on_screen_xkli.svg') }}"
+                             alt="Femme regardant un smartphone avec la nature qui en sort">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <section>
+            <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+                <div class="mx-auto max-w-3xl text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+                        Expériences partagées, Souvenirs inoubliables
+                    </h2>
+
+                    <p class="mt-4 text-gray-500 sm:text-xl">
+                        Vivez l'excitation collective : Des milliers de sorties, des participants comblés et une
+                        satisfaction sans égale !
+                    </p>
+                </div>
+
+                <div class="mt-8 sm:mt-12">
+                    <dl
+                            class="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:divide-x sm:divide-gray-100"
+                    >
+                        <div class="flex flex-col px-4 py-8 text-center">
+                            <dt class="order-last text-lg font-medium text-gray-500">
+                                Sorties organisées
+                            </dt>
+
+                            <dd class="text-4xl font-extrabold text-green-600 md:text-5xl">
+                                {{ sorties|length }}
+                            </dd>
+                        </div>
+
+                        <div class="flex flex-col px-4 py-8 text-center">
+                            <dt class="order-last text-lg font-medium text-gray-500">
+                                Participants aux sorties
+                            </dt>
+
+                            <dd class="text-4xl font-extrabold text-green-600 md:text-5xl">
+                                {{ participants|length }}
+                            </dd>
+                        </div>
+
+                        <div class="flex flex-col px-4 py-8 text-center">
+                            <dt class="order-last text-lg font-medium text-gray-500">
+                                Campus
+                            </dt>
+
+                            <dd class="text-4xl font-extrabold text-green-600 md:text-5xl">
+                                {{ campus|length }}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gradient-to-br from-green-700 to-green-600 text-white">
+            <div class="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16 mx-auto">
+                <div class="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
+                    <div class="mx-auto max-w-lg text-center lg:mx-0 lg:text-left">
+                        <h2 class="text-3xl font-bold sm:text-4xl">
+                            Pourquoi choisir Sortir.com ?
+                        </h2>
+                        <p class="mt-4 mb-8 text-gray-200">
+                            Les 6 avantages qui font toute la différence !
+                        </p>
+                        <a class="relative flex justify-center lg:inline w-auto rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
+                           href="{{ app.user ? path('app_sortie_index') : path('app_register') }}"
+                        >Commencer l'aventure</a>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path fill-rule="evenodd"
+        d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+        clip-rule="evenodd"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Localisation</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Localisez facilement les meilleures sorties à proximité.
+                            </p>
+                        </a>
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M12.75 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM7.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM8.25 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM9.75 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM10.5 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM12.75 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM14.25 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 17.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 15.75a.75.75 0 100-1.5.75.75 0 000 1.5zM15 12.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM16.5 13.5a.75.75 0 100-1.5.75.75 0 000 1.5z"/>
+  <path fill-rule="evenodd"
+        d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+        clip-rule="evenodd"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Varié</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Une grande diversité d'événements pour tous les goûts.
+                            </p>
+                        </a>
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Dynamique</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Rejoignez une communauté passionnée.
+                            </p>
+                        </a>
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path fill-rule="evenodd"
+        d="M9 4.5a.75.75 0 01.721.544l.813 2.846a3.75 3.75 0 002.576 2.576l2.846.813a.75.75 0 010 1.442l-2.846.813a3.75 3.75 0 00-2.576 2.576l-.813 2.846a.75.75 0 01-1.442 0l-.813-2.846a3.75 3.75 0 00-2.576-2.576l-2.846-.813a.75.75 0 010-1.442l2.846-.813A3.75 3.75 0 007.466 7.89l.813-2.846A.75.75 0 019 4.5zM18 1.5a.75.75 0 01.728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 010 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 01-1.456 0l-.258-1.036a2.625 2.625 0 00-1.91-1.91l-1.036-.258a.75.75 0 010-1.456l1.036-.258a2.625 2.625 0 001.91-1.91l.258-1.036A.75.75 0 0118 1.5zM16.5 15a.75.75 0 01.712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 010 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 01-1.422 0l-.395-1.183a1.5 1.5 0 00-.948-.948l-1.183-.395a.75.75 0 010-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0116.5 15z"
+        clip-rule="evenodd"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Exceptionnel</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Profitez des recommandations de nos participants.
+                            </p>
+                        </a>
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path fill-rule="evenodd"
+        d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z"
+        clip-rule="evenodd"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Sécurité</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Des mesures de sécurité strictes.
+                            </p>
+                        </a>
+                        <a
+                                class="block rounded-xl border border-gray-100 p-4 shadow-sm hover:border-gray-200 hover:ring-1 hover:ring-gray-200 focus:outline-none focus:ring"
+                                href="{{ path('app_register') }}"
+                        >
+                        <span class="inline-block p-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
+</svg>
+                        </span>
+                            <h3 class="mt-2 font-bold">Expériences</h3>
+                            <p class="hidden sm:mt-1 sm:block sm:text-sm sm:text-gray-200">
+                                Créez des souvenirs mémorables en participant.
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-gray-600 body-font">
+            <div class="container px-5 py-24 mx-auto space-y-8">
+
+                <div class="mx-auto max-w-3xl text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
+                        Nos utilisateurs parlent de nous
+                    </h2>
+                </div>
+
+                <div
+                        class="swiper overflow-x-hidden"
+                        {{ stimulus_controller('swiper') }}
+                >
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Sophie Martin"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Sortir.com est un site incroyable ! J'ai découvert des
+                                        sorties exceptionnelles grâce à leur sélection soigneusement organisée. Je
+                                        recommande vivement !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Sophie
+                                        Martin</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Maxime Dubois"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Un service remarquable ! J'ai pu participer à plusieurs
+                                        sorties passionnantes et j'ai rencontré des personnes formidables. Merci pour
+                                        cette
+                                        expérience inoubliable Sortir.com !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Maxime
+                                        Dubois</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Camille Lambert"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Sortir.com m'a permis de trouver des sorties uniques et
+                                        insolites. J'ai adoré chaque moment passé et je suis impatiente de continuer à
+                                        explorer avec eux !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Camille Lambert</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Thomas Lefebvre"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Sortir.com est une plateforme très conviviale et très
+                                        facile
+                                        à utiliser. J'ai été surpris par la diversité des activités proposées. C'est
+                                        devenu
+                                        mon guide incontournable pour mes sorties !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Thomas
+                                        Lefebvre</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Élodie Dupont"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Grâce à Sortir.com, j'ai pu me plonger dans des aventures
+                                        incroyables. Les organisateurs sont très professionnels et attentifs à chaque
+                                        détail. Je le recommande vivement !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Élodie
+                                        Dupont</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="lg:mb-0 mb-6 p-4">
+                                <div class="h-full text-center">
+                                    <img alt="Avis de Nicolas Renault"
+                                         class="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100"
+                                         src="https://thispersondoesnotexist.com/">
+                                    <p class="leading-relaxed">Une expérience fantastique ! J'ai trouvé des sorties qui
+                                        correspondaient parfaitement à mes intérêts. J'ai été agréablement surpris par
+                                        la
+                                        qualité des activités proposées. Bravo à toute l'équipe !</p>
+                                    <span class="inline-block h-1 w-10 rounded bg-green-700 mt-6 mb-4"></span>
+                                    <h3 class="text-gray-900 font-medium title-font tracking-wider text-sm uppercase">
+                                        Nicolas Renault</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="px-4 mx-auto max-w-screen-xl lg:px-6">
+                <div class="py-8 lg:py-16 px-4 lg:px-6 w-full bg-green-600 rounded-3xl">
+                    <div class="mx-auto max-w-screen-md sm:text-center">
+                        <h2 class="mb-4 text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl text-white">
+                            Qu'attendez-vous pour rejoindre l'aventure ?</h2>
+                        <p class="mx-auto mb-8 max-w-2xl font-light text-gray-200 md:mb-12 sm:text-xl">Rejoignez une
+                            communauté dynamique de + de 10 000 personnes en France afin de vivre des moments
+                            sensationnels
+                            et inoubliables temps qu'il en est encore temps.</p>
+                        <a class="relative flex justify-center w-auto rounded-md border border-transparent font-bold bg-white py-2 px-4 text-sm text-green-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 cursor-pointer"
+                           href="{{ app.user ? path('app_sortie_index') : path('app_register') }}"
+                        >Commencer l'aventure</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 {% endblock %}

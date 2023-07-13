@@ -1,0 +1,74 @@
+{% if app.user == sortie.organisateur or is_granted('ROLE_ADMIN') %}
+    <a
+            class="{{ green ?? 'text-green-600 hover:text-green-700 cursor-pointer' }}"
+            href="{{ path('app_sortie_edit', {'id': sortie.id}) }}"
+    >Modifier</a>
+    {% if sortie.etat == 'Créée' %}
+        <form
+                action="{{ path('app_sortie_publish', {'id': sortie.id}) }}"
+                method="post"
+                {{ stimulus_controller('confirm-popup', {
+                    title: 'Publier la sortie ' ~ sortie.nom ,
+                    text: 'Êtes-vous sûr de vouloir continuer ?',
+                    confirmationButtonText: 'Publier',
+                }) }}
+        >
+            <input type="submit"
+                   class="{{ blue ?? 'text-blue-500 hover:text-blue-600 cursor-pointer' }}"
+                   value="Publier"
+                    {{ stimulus_action('confirm-popup', 'onSubmit') }}
+            >
+        </form>
+    {% elseif sortie.etat == 'Ouverte' %}
+        <form
+                action="{{ path('app_sortie_annuler', {'id': sortie.id}) }}"
+                method="post"
+                {{ stimulus_controller('confirm-popup', {
+                    title: 'Annuler la sortie ' ~ sortie.nom ,
+                    confirmationButtonText: 'Confirmer',
+                    submitAsync: true,
+                }) }}
+        >
+            <input type="submit"
+                   class="{{ red ?? 'text-red-500 hover:text-red-600 cursor-pointer' }}"
+                   value="Annuler"
+                    {{ stimulus_action('confirm-popup', 'onSortieCancel') }}
+            >
+        </form>
+    {% endif %}
+{% endif %}
+{% if not sortie.participants.contains(app.user)
+    and date(sortie.dateLimiteInscription) > date()
+    and sortie.etat == "Ouverte"
+    and sortie.participants|length < sortie.nbInscriptionMax %}
+    <form
+            action="{{ path('app_sortie_inscription', {'id': sortie.id}) }}"
+            method="post"
+            {{ stimulus_controller('confirm-popup', {
+                title: 'S\'inscrire à la sortie ' ~ sortie.nom ,
+                confirmationButtonText: 'S\'inscrire',
+            }) }}
+    >
+        <input type="submit"
+               class="{{ green ?? 'text-blue-500 hover:text-blue-600 cursor-pointer' }}"
+               value="S'inscrire"
+                {{ stimulus_action('confirm-popup', 'onSubmit') }}
+        >
+    </form>
+{% elseif sortie.participants.contains(app.user) %}
+    <form
+            action="{{ path('app_sortie_desinscription', {'id': sortie.id}) }}"
+            method="post"
+            {{ stimulus_controller('confirm-popup', {
+                title: 'Se désincrire de la sortie ' ~ sortie.nom ,
+                text: 'Êtes-vous sûr de vouloir continuer ?',
+                confirmationButtonText: 'Se désincrire',
+            }) }}
+    >
+        <input type="submit"
+               class="{{ red ?? 'text-blue-500 hover:text-blue-600 cursor-pointer' }}"
+               value="Se désinscrire"
+                {{ stimulus_action('confirm-popup', 'onSubmit') }}
+        >
+    </form>
+{% endif %}

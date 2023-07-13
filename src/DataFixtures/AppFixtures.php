@@ -100,7 +100,7 @@ class AppFixtures extends Fixture
         }
 
         // Sorties
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $todayBetween6Months = $faker->dateTimeBetween('now', '+1 month');
             $sortie = new Sortie();
             $sortie->setNom($faker->sentence(3));

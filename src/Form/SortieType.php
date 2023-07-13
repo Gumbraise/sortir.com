@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Participant;
 use App\Entity\Sortie;
-use EasyCorp\Bundle\EasyAdminBundle\Form\Filter\Type\DateTimeFilterType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;

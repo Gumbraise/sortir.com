@@ -50,7 +50,8 @@ class SortieRepository extends ServiceEntityRepository
         $nom,
         $dateDebut,
         $dateFin,
-        $checkboxs
+        $checkboxs,
+        $etat
     ): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -99,6 +100,9 @@ class SortieRepository extends ServiceEntityRepository
         if ($checkboxs['isPast']) {
             $qb->andWhere('s.dateHeureDebut < :now')
                 ->setParameter('now', new \DateTimeImmutable('now'));
+        } else {
+            $qb->andWhere('s.etat = :etat')
+                ->setParameter('etat', $etat);
         }
 
         return $qb

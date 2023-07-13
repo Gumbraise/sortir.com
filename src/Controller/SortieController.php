@@ -24,6 +24,7 @@ class SortieController extends AbstractController
     public function index(
         Request          $request,
         SortieRepository $sortieRepository,
+        EtatRepository   $etatRepository,
     ): Response
     {
         $form = $this->createForm(SearchSortieType::class);
@@ -56,8 +57,9 @@ class SortieController extends AbstractController
             $name,
             $startDate,
             $endDate,
-            $checkboxs
-        );
+            $checkboxs,
+            $etatRepository->findByLibelle("Ouverte")
+    );
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -72,7 +74,7 @@ class SortieController extends AbstractController
     public function new(
         Request          $request,
         SortieRepository $sortieRepository,
-        EtatRepository $etatRepository
+        EtatRepository   $etatRepository
     ): Response
     {
         $sortie = new Sortie();
@@ -91,20 +93,20 @@ class SortieController extends AbstractController
         ]);
     }
 
-    public function getCurrentUser(): ?Participant
+    #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
+    public function show(
+        Sortie $sortie
+    ): Response
     {
-        $user = $this->getUser();
-
-        if (!$user instanceof Participant) {
-            return null;
+        if (
+            !$sortie->getParticipants()->contains($this->getUser()) &&
+            !$sortie->getCampus()->getParticipants()->contains($this->getUser()) &&
+            $sortie->getOrganisateur() !== $this->getUser() &&
+            !$this->isGranted('ROLE_ADMIN')
+        ) {
+            return $this->redirectToRoute('app_sortie_index');
         }
 
-        return $user;
-    }
-
-    #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
-    public function show(Sortie $sortie): Response
-    {
         if ($sortie->getDateHeureDebut() < new \DateTimeImmutable("-1 month")) {
             $this->addFlash('error', 'La sortie est trop ancienne pour être affichée');
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
@@ -115,7 +117,7 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/inscrire', name: 'app_sortie_inscription', methods: ['GET', 'POST'])]
+    #[Route('/{id}/inscrire', name: 'app_sortie_inscription', methods: ['POST'])]
     public function inscrire(
         Sortie                 $sortie,
         EntityManagerInterface $entityManager,
@@ -142,7 +144,7 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/desinscrire', name: 'app_sortie_desinscription', methods: ['GET', 'POST'])]
+    #[Route('/{id}/desinscrire', name: 'app_sortie_desinscription', methods: ['POST'])]
     public function desinscrire(
         Sortie                 $sortie,
         EntityManagerInterface $entityManager,
@@ -159,7 +161,11 @@ class SortieController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_sortie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
+    public function edit(
+        Request          $request,
+        Sortie           $sortie,
+        SortieRepository $sortieRepository
+    ): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -176,45 +182,47 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
-            $sortieRepository->remove($sortie, true);
-        }
-
-        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
-    }
-
     /**
      * @throws NonUniqueResultException
      */
     #[Route('/{id}/publier', name: 'app_sortie_publish', methods: ['GET', 'POST'])]
-    public function publish(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response{
+    public function publish(
+        Sortie           $sortie,
+        SortieRepository $sortieRepository,
+        EtatRepository   $etatRepository
+    ): Response
+    {
         $sortie->setEtat($etatRepository->findByLibelle('Ouverte'));
-        $sortieRepository->save($sortie,true);
+        $sortieRepository->save($sortie, true);
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
-    #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['GET', 'POST'])]
-    public function annuler(Request $request, Sortie $sortie, SortieRepository $sortieRepository, EtatRepository $etatRepository):Response{
-        $form = $this->createForm(SortieAnnuleeType::class, $sortie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setEtat($etatRepository->findByLibelle("Annulée"));
-            $sortieRepository->save($sortie, true);
-
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    #[Route('/{id}/annuler', name: 'app_sortie_annuler', methods: ['POST'])]
+    public function annuler(
+        Request          $request,
+        Sortie           $sortie,
+        SortieRepository $sortieRepository,
+        EtatRepository   $etatRepository
+    )
+    {
+        if (
+            !$sortie->getParticipants()->contains($this->getUser()) &&
+            $sortie->getOrganisateur() !== $this->getUser() &&
+            !$this->isGranted('ROLE_ADMIN')
+        ) {
+            return $this->redirectToRoute('app_sortie_index');
         }
 
-        return $this->renderForm('sortie/annuler.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form,
-        ]);
+        try {
+            $sortie->setEtat($etatRepository->findByLibelle("Annulée"));
+            $sortie->setRaisonsAnnulation($request->request->get('raisonsAnnulation'));
+            $sortieRepository->save($sortie, true);
+
+            $this->addFlash('success', "La sortie $sortie a bien été annulée");
+
+        } catch (\Exception $e) {
+            $this->addFlash('error', "Une erreur s'est produite.");
+        }
     }
 }
