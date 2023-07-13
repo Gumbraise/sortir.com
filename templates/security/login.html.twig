@@ -20,7 +20,7 @@
                     <form class="mt-8 space-y-6" method="POST">
                         {% if error %}
                             <div class="text-red-600 text-center"
-                                 role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                 role="alert">{{ error.messageKey|trans(error.messageData, 'security', 'fr_FR') }}</div>
                         {% endif %}
 
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
