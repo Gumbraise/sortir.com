@@ -1,12 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VilleController!{% endblock %}
+{% block title %}Ajouter une nouvelle ville{% endblock %}
 
 {% block body %}
-    <h1>Ajouter une ville</h1>
+    <div class="f-form">
+        <div class="f-head">
+            <h1>Ajouter une nouvelle ville</h1>
+        </div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button type="submit">Save</button>
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+        <div class="f-button-container">
+            <a class="f-button f-button-secondary" href="{{ path('app_lieu_add') }}">Annuler</a>
+            <button class="f-button" type="submit">Enregistrer</button>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
 {% endblock %}
