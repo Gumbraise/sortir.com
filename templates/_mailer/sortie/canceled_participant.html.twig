@@ -7,23 +7,18 @@
     <div style="padding: 2rem; text-align: center;">
         <img src="{{ app.request.schemeAndHttpHost }}{{ asset('images/static/sortircom.png') }}"
              alt="Logo de Sortir.com" style="margin-left: auto; margin-right: auto; width: 8rem;">
-        <h1 style="margin: 0 0 1rem 0; font-size: 22px">Réinitialiser votre mot de passe</h1>
-        <p style="margin: 1rem 0 .5rem 0;">Vous recevez ce mail car vous avez demandé à réinitialiser votre mot de
-            passe Sortir.com</p>
-        <p style="margin: .5rem 0 2rem 0;">Pour réinitialiser votre mot de passe, cliquez sur le bouton suivant :</p>
-        <a href="{{ url('app_reset_password', {token: resetToken.token}) }}"
-           style="color: #fff; padding: 0.75rem 1rem; background-color: #16a34a; border-radius: 0.375rem; text-decoration: inherit; margin: 1rem auto;"
-        >Réinitialiser le mot de passe</a>
-        <p style="margin: 2rem 0 1rem 0;">Si le bouton ne fonctionne pas vous pouvez copier/coller l'URL suivante
-            dans votre navigateur :</p>
-        <a href="{{ url('app_reset_password', {token: resetToken.token}) }}"
-           style="font-size: 0.875rem; line-height: 1.5rem; background-color: #eeefef; padding: 0.25rem 0; margin: 0.5rem 0; word-break: break-all;">
-            {{ url('app_reset_password', {token: resetToken.token}) }}
-        </a>
-        <p style="margin: 1rem 0;">
-            Sortir.com
+        <h1 style="margin: 0 0 1rem 0; font-size: 22px">La sortie {{ sortie.nom }} prévue
+            le {{ sortie.dateHeureDebut|date('d/m/Y \à H:i') }} à laquelle vous êtes inscrit a été annulée !</h1>
+        <p style="margin: 1rem 0 .5rem 0;">La raison est la suivante :<br>
+            <span style="font-size: 0.875rem; line-height: 1.5rem; background-color: #eeefef; padding: 0.25rem 0; margin: 0.5rem 0; word-break: break-all;">
+                {{ sortie.raisonsAnnulation|raw }}
+            </span>
         </p>
-
+        <p style="margin: .5rem 0 2rem 0;">Nous sommes désolé pour ce désagrément.</p>
+        <p style="margin: 1rem 0;">
+            Cordialement,<br>
+            L'équipe Sortir.com
+        </p>
     </div>
 
     <div style="padding: 2rem 0 10rem 0; color: #7e8296; font-size: 0.75rem; line-height: 1rem;">
