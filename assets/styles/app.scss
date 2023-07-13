@@ -143,11 +143,15 @@ form[name="profile_edit_form"],form[name="lieu"],form[name="ville"],form[name="s
 }
 
 @media (max-width: 767px) {//mobile
-  form[name="profile_edit_form"],form[name="lieu"],form[name="ville"],form[name="sortie"]{
+  form[name="profile_edit_form"],form[name="lieu"],form[name="ville"],form[name="sortie"] > div:not(.f-button-container):not(.f-sublink){
     > div{
       display: flex;
       flex-direction: column;
       align-items: inherit;
+    }
+    select{
+      width: fit-content;
+      max-width: 100%;
     }
   }
 }
