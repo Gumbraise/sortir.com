@@ -1,0 +1,34 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container px-4 mx-auto max-w-3xl text-green-800">
+        <div class="self-center">
+            <div class="w-full my-16 sm:my-32 space-y-8">
+                <img
+                        src="{{ asset('images/static/undraw_page_not_found_re_e9o6.svg') }}"
+                        alt="404 Error Image"
+                        class="w-full sm:w-1/2 mx-auto"
+                />
+                <div class="space-y-2">
+                    <h1 class="sr-only">
+                        {{ exception.getStatusCode }}
+                    </h1>
+                    <h2 class="text-4xl font-bold text-center">
+                        La tête dans les buissons
+                    </h2>
+                    <p class="text-md text-gray-700 text-center">
+                        {{ exception.message }}
+                    </p>
+                </div>
+                <div class="justify-center flex space-x-8">
+                    <a href="{{ path('app_homepage') }}"
+                       class="text-center self-center w-auto font-bold text-green-700 hover:text-green-800 transition duration-200 hover:underline"
+                    >
+                        Retourner sur la page d'accueil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
