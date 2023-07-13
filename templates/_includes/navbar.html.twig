@@ -54,7 +54,7 @@
                 </li>
                 <li>
                     <a
-                            href="{{ path('app_sortie_index') }}"
+                            href="{{ app.user ? path('app_sortie_index') : path('app_login') }}"
                             class="block py-2 pl-3 pr-4 rounded md:p-0 {{ app.request.get('_route') == 'app_sortie_index' ? "text-white bg-green-700 md:bg-transparent md:text-green-700" : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700" }}"
                     >Sorties</a>
                 </li>
