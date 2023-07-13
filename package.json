@@ -31,6 +31,7 @@
         "@babel/plugin-proposal-class-properties": "^7.18.6",
         "@symfony/stimulus-bridge": "^3.2.2",
         "js-datepicker": "^5.18.2",
-        "leaflet": "^1.9.4"
+        "leaflet": "^1.9.4",
+        "notyf": "^3.10.0"
     }
 }
