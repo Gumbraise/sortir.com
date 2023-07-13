@@ -10,11 +10,13 @@ use App\Form\SortieAnnuleeType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
+use App\Utils\SendMail;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/sorties')]
@@ -59,7 +61,7 @@ class SortieController extends AbstractController
             $endDate,
             $checkboxs,
             $etatRepository->findByLibelle("Ouverte")
-    );
+        );
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -83,6 +85,8 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $sortie->setCampus($this->getUser()->getCampus());
+            $sortie->setOrganisateur($this->getUser());
+            $sortie->setEtat($etatRepository->findByLibelle('Créée'));
             $sortieRepository->save($sortie, true);
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -121,6 +125,7 @@ class SortieController extends AbstractController
     public function inscrire(
         Sortie                 $sortie,
         EntityManagerInterface $entityManager,
+        SendMail               $sendMail
     ): Response
     {
         if (
@@ -137,8 +142,18 @@ class SortieController extends AbstractController
         $sortie->addParticipant($this->getUser());
         try {
             $entityManager->flush();
+
+            $sendMail->TemplatedEmail(
+                $this->getUser()->getEmail(),
+                'no-reply@sortir.com',
+                'Votre inscription à la sortie ' . $sortie . ' !',
+                '_mailer/sortie/inscription.html.twig',
+                ['sortie' => $sortie]
+            );
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue lors de l\'inscription');
+        } catch (TransportExceptionInterface $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi des mails');
         }
 
         return $this->redirectToRoute('app_sortie_show', ["id" => $sortie->getId()], Response::HTTP_SEE_OTHER);
@@ -148,13 +163,24 @@ class SortieController extends AbstractController
     public function desinscrire(
         Sortie                 $sortie,
         EntityManagerInterface $entityManager,
+        SendMail               $sendMail
     ): Response
     {
         $sortie->removeParticipant($this->getUser());
         try {
             $entityManager->flush();
+
+            $sendMail->TemplatedEmail(
+                $this->getUser()->getEmail(),
+                'no-reply@sortir.com',
+                'Votre désinscription à la sortie ' . $sortie . ' !',
+                '_mailer/sortie/desinscription.html.twig',
+                ['sortie' => $sortie]
+            );
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue lors de la désinscription');
+        } catch (TransportExceptionInterface $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi des mails');
         }
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
@@ -164,14 +190,40 @@ class SortieController extends AbstractController
     public function edit(
         Request          $request,
         Sortie           $sortie,
-        SortieRepository $sortieRepository
+        SortieRepository $sortieRepository,
+        SendMail         $sendMail
     ): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortieRepository->save($sortie, true);
+            try {
+                $sortieRepository->save($sortie, true);
+
+                $sendMail->TemplatedEmail(
+                    $sortie->getOrganisateur()->getEmail(),
+                    'no-reply@sortir.com',
+                    'Votre sortie ' . $sortie . ' a bien été modifiée !',
+                    '_mailer/sortie/updated_organisateur.html.twig',
+                    ['sortie' => $sortie]
+                );
+
+                foreach ($sortie->getParticipants() as $participant) {
+                    $sendMail->TemplatedEmail(
+                        $participant->getEmail(),
+                        $sortie->getOrganisateur()->getEmail(),
+                        'La sortie ' . $sortie . ' a été modifiée !',
+                        '_mailer/sortie/updated_participant.html.twig',
+                        ['sortie' => $sortie]
+                    );
+                }
+            } catch (\Exception $e) {
+                $this->addFlash('error', "Une erreur s'est produite.");
+            } catch (TransportExceptionInterface $e) {
+                $this->addFlash('error', "Une erreur s'est produite lors de l'envoi des mails.");
+            }
+
 
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -203,7 +255,8 @@ class SortieController extends AbstractController
         Request          $request,
         Sortie           $sortie,
         SortieRepository $sortieRepository,
-        EtatRepository   $etatRepository
+        EtatRepository   $etatRepository,
+        SendMail         $sendMail
     )
     {
         if (
@@ -219,10 +272,28 @@ class SortieController extends AbstractController
             $sortie->setRaisonsAnnulation($request->request->get('raisonsAnnulation'));
             $sortieRepository->save($sortie, true);
 
-            $this->addFlash('success', "La sortie $sortie a bien été annulée");
+            $sendMail->TemplatedEmail(
+                $sortie->getOrganisateur()->getEmail(),
+                'no-reply@sortir.com',
+                'Votre sortie ' . $sortie . ' a bien été annulée !',
+                '_mailer/sortie/canceled_organisateur.html.twig',
+                ['sortie' => $sortie]
+            );
+            foreach ($sortie->getParticipants() as $participant) {
+                $sendMail->TemplatedEmail(
+                    $participant->getEmail(),
+                    $sortie->getOrganisateur()->getEmail(),
+                    'La sortie ' . $sortie . ' a été annulée !',
+                    '_mailer/sortie/canceled_participant.html.twig',
+                    ['sortie' => $sortie]
+                );
+            }
 
+            $this->addFlash('success', "La sortie $sortie a bien été annulée");
         } catch (\Exception $e) {
             $this->addFlash('error', "Une erreur s'est produite.");
+        } catch (TransportExceptionInterface $e) {
+            $this->addFlash('error', "Une erreur s'est produite lors de l'envoi des mails.");
         }
     }
 }
