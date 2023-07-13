@@ -41,7 +41,7 @@ class SortieType extends AbstractType
             ->add('lieu')
         ;
         $roles = $currentUser->getRoles();
-        if (in_array('ROLE_ADMIN', $roles, true)) {
+        if (in_array('ROLE_ADMIN', $roles, true) && !$currentUser->getCampus()) {
             $builder->add('campus', EntityType::class, [
                 'class' => 'App\Entity\Campus',
                 'choice_label' => 'nom',
