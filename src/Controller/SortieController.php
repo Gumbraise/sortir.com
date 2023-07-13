@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
-use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\ExcelType;
 use App\Form\SearchSortieType;
-use App\Form\SortieAnnuleeType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Utils\SendMail;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,6 +80,7 @@ class SortieController extends AbstractController
     ): Response
     {
         $sortie = new Sortie();
+
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
@@ -102,7 +103,11 @@ class SortieController extends AbstractController
 
     #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
     public function show(
-        Sortie $sortie
+        Sortie                 $sortie,
+        ParticipantRepository  $participantRepository,
+        SendMail               $sendMail,
+        EntityManagerInterface $entityManager,
+        Request                $request
     ): Response
     {
         if (
@@ -119,8 +124,60 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        if (
+            $sortie->getOrganisateur() === $this->getUser() ||
+            $this->isGranted('ROLE_ADMIN')
+        ) {
+            $excelForm = $this->createForm(ExcelType::class);
+            $excelForm->handleRequest($request);
+
+            if ($excelForm->isSubmitted() && $excelForm->isValid()) {
+
+                $spreadsheet = IOFactory::load($excelForm->get('excel_file')->getData());
+                $worksheet = $spreadsheet->getActiveSheet();
+                $data = [];
+                foreach ($worksheet->getRowIterator() as $row) {
+                    $rowData = [];
+                    foreach ($row->getCellIterator() as $cell) {
+                        $rowData[] = $cell->getValue();
+                    }
+                    $data[] = $rowData;
+                }
+
+                // Insertion des données dans la base de données
+                foreach ($data as $rowData) {
+                    $newParticipant = $participantRepository->findOneBy(['pseudo' => $rowData[0]]);
+
+                    if ($newParticipant) {
+                        $sortie->addParticipant($newParticipant);
+
+                        try {
+                            $entityManager->persist($newParticipant);
+                            $entityManager->flush();
+
+                            $sendMail->TemplatedEmail(
+                                $newParticipant->getEmail(),
+                                'no-reply@sortir.com',
+                                'Votre inscription à la sortie ' . $sortie . ' !',
+                                '_mailer/sortie/inscription.html.twig',
+                                ['sortie' => $sortie]
+                            );
+                        } catch (\Exception $e) {
+                            $this->addFlash('error', 'Une erreur est survenue lors de l\'inscription');
+                        } catch (TransportExceptionInterface $e) {
+                            $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi des mails');
+                        }
+                    } else {
+                        $this->addFlash('error', "$rowData[0] n'est pas inscrit sur Sortir.com");
+                    }
+                }
+                return $this->redirectToRoute('app_sortie_show', ['id' => $sortie->getId()], Response::HTTP_SEE_OTHER);
+            }
+        }
+
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
+            'excelForm' => $excelForm->createView(),
         ]);
     }
 

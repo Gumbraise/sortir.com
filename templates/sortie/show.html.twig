@@ -110,6 +110,31 @@
                             </table>
                         </div>
                     </div>
+                    {% if sortie.participants.contains(app.user) or is_granted('ROLE_ADMIN') %}
+                        <div
+                                {{ stimulus_controller('dropdown') }}
+                        >
+                            <button
+                                    class="relative flex w-full justify-center rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                    {{ stimulus_action('dropdown', 'drop') }}
+                            >
+                                Ajouter des participants via un .csv
+                            </button>
+                            <div
+                                    class="hidden"
+                                    {{ stimulus_target('dropdown', 'dropdown') }}
+                            >
+                                {{ form_start(excelForm) }}
+                                {{ form_row(excelForm.excel_file) }}
+                                <button
+                                        class="relative flex w-full justify-center rounded-md border border-transparent font-bold bg-green-600 py-2 px-4 text-sm text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                        type="submit">
+                                    Envoyer les invitations
+                                </button>
+                                {{ form_end(excelForm) }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="space-y-4">
