@@ -84,7 +84,9 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sortie->setCampus($this->getUser()->getCampus());
+            if($this->getUser()->getCampus()){
+                $sortie->setCampus($this->getUser()->getCampus());
+            }
             $sortie->setOrganisateur($this->getUser());
             $sortie->setEtat($etatRepository->findByLibelle('Créée'));
             $sortieRepository->save($sortie, true);
